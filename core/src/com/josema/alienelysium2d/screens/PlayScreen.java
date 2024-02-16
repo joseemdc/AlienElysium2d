@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -27,9 +29,14 @@ import com.josema.alienelysium2d.MyGdxGame;
 import com.josema.alienelysium2d.scenes.Hud;
 import com.josema.alienelysium2d.sprites.Player;
 import com.josema.alienelysium2d.tools.B2WorldCreator;
+import com.josema.alienelysium2d.tools.WorldContactListener;
 
 public class PlayScreen implements Screen {
+    //Referencia del juego, usado para establecer pantallas
     private MyGdxGame game;
+
+    private TextureAtlas atlas;
+    //variables báscias del PlayScreen
     Texture texture;
     private OrthographicCamera gameCam;
     private Viewport gamePort;
@@ -44,6 +51,8 @@ public class PlayScreen implements Screen {
     private Box2DDebugRenderer b2dr;
     private Player player;
     public PlayScreen(MyGdxGame game) {
+
+        atlas= new TextureAtlas("player_and_enemy.atlas");
         this.game = game;
 
         gameCam= new OrthographicCamera();
@@ -64,8 +73,13 @@ public class PlayScreen implements Screen {
 
         new B2WorldCreator(world,map);
         //crea un personaje en nuestro juego
-         player = new Player(world);
+         player = new Player(world,this);
 
+            world.setContactListener(new WorldContactListener());
+    }
+
+    public TextureAtlas getAtlas() {
+        return atlas;
     }
 
     @Override
@@ -88,7 +102,9 @@ public class PlayScreen implements Screen {
         handleInput(dt);
 
         world.step(1/60f,6,2);
+        player.update(dt);
 
+        // ancla  la gamecam a la posicion x del jugador
         gameCam.position.x=player.b2body.getPosition().x;
         //actualizar cámara
         gameCam.update();
@@ -107,6 +123,11 @@ public class PlayScreen implements Screen {
         renderer.render();
         //rederiza las Box2DDebugLines
         b2dr.render(world,gameCam.combined);
+
+        game.batch.setProjectionMatrix(gameCam.combined);
+        game.batch.begin();
+        player.draw(game.batch);
+        game.batch.end();
 
         //establece el batch para dibujar lo que la camara del HUD ve
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
