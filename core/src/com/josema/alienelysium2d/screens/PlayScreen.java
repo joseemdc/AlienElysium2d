@@ -1,5 +1,6 @@
 package com.josema.alienelysium2d.screens;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -57,39 +58,40 @@ public class PlayScreen implements Screen {
     private AssetManager manager;
     private Music music;
     private Controller controller;
+
     public PlayScreen(MyGdxGame game, AssetManager manager) {
 
-        atlas= new TextureAtlas("player_and_enemy.atlas");
+        atlas = new TextureAtlas("player_and_enemy.atlas");
         this.game = game;
 
-        gameCam= new OrthographicCamera();
+        gameCam = new OrthographicCamera();
         //crear un FitViewport para mantener la relación de aspecto a pesar del tamaño de la pantalla
-        gamePort = new FillViewport(MyGdxGame.V_WIDTH/MyGdxGame.PPM,MyGdxGame.V_HEIGHT/MyGdxGame.PPM,gameCam);
+        gamePort = new FillViewport(MyGdxGame.V_WIDTH / MyGdxGame.PPM, MyGdxGame.V_HEIGHT / MyGdxGame.PPM, gameCam);
 
         //crear el HUD para la informacion en pantalla
-        hud= new Hud(game.batch);
+        hud = new Hud(game.batch);
         //crea el controller
-        controller= new Controller(game.batch);
+        controller = new Controller(game.batch);
         //cargar el mapa y establecer el renderizador del mapa
         mapLoader = new TmxMapLoader();
-        map=mapLoader.load("level1.tmx");
-        renderer=new OrthogonalTiledMapRenderer(map,1/MyGdxGame.PPM);
+        map = mapLoader.load("level1.tmx");
+        renderer = new OrthogonalTiledMapRenderer(map, 1 / MyGdxGame.PPM);
         //poner centrada la cámara al inicio del mapa
-        gameCam.position.set((float) gamePort.getWorldWidth() /2, (float) gamePort.getWorldHeight() /2,0);
-    //crea un mundo Box2d
-        world = new World(new Vector2(0,-10),true);
+        gameCam.position.set((float) gamePort.getWorldWidth() / 2, (float) gamePort.getWorldHeight() / 2, 0);
+        //crea un mundo Box2d
+        world = new World(new Vector2(0, -10), true);
         //mostrar debug lines del mapa
-        b2dr= new Box2DDebugRenderer();
+        b2dr = new Box2DDebugRenderer();
 
-        new B2WorldCreator(world,map);
+        new B2WorldCreator(world, map);
         //crea un personaje en nuestro juego
-this.manager=manager;
-         player = new Player(world,this,manager);
+        this.manager = manager;
+        player = new Player(world, this, manager);
 
-            world.setContactListener(new WorldContactListener(manager));
-            music =manager.get("audio/spaceship-ambience-with-effects-21420.mp3",Music.class);
-            music.setLooping(true);
-            music.play();
+        world.setContactListener(new WorldContactListener(manager));
+        music = manager.get("audio/spaceship-ambience-with-effects-21420.mp3", Music.class);
+        music.setLooping(true);
+        music.play();
     }
 
     public TextureAtlas getAtlas() {
@@ -100,32 +102,34 @@ this.manager=manager;
     public void show() {
 
     }
-    public void handleInput(float dt){
+
+    public void handleInput(float dt) {
 //        float velocityX = 0.0003f; // Velocidad horizontal deseada en unidades por segundo
 //        float velocityY=0.03f;
         float velocityX = 4.5f; // Velocidad horizontal deseada en unidades por segundo
-        float velocityY=300f;
-        float impulseY = velocityY*dt;
+        float velocityY = 300f;
+        float impulseY = velocityY * dt;
         float impulseX = velocityX * dt; // Impulso horizontal requerido por segundo
-        if((Gdx.input.isKeyJustPressed(Input.Keys.UP)|| Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.W)|| controller.isUpPressed())&& player.currentState!= Player.State.JUMPING){
-            player.b2body.applyLinearImpulse(new Vector2(0,impulseY),player.b2body.getWorldCenter(),true);
+        if ((Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.W) || controller.isUpPressed()) && player.currentState != Player.State.JUMPING) {
+            player.b2body.applyLinearImpulse(new Vector2(0, impulseY), player.b2body.getWorldCenter(), true);
         }
-        if((Gdx.input.isKeyPressed(Input.Keys.RIGHT)||Gdx.input.isKeyPressed(Input.Keys.D)|| controller.isRightPressed()) && player.b2body.getLinearVelocity().x<=2){
-            player.b2body.applyLinearImpulse(new Vector2(impulseX,0),player.b2body.getWorldCenter(),true);
+        if ((Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D) || controller.isRightPressed()) && player.b2body.getLinearVelocity().x <= 2) {
+            player.b2body.applyLinearImpulse(new Vector2(impulseX, 0), player.b2body.getWorldCenter(), true);
         }
-        if((Gdx.input.isKeyPressed(Input.Keys.LEFT)||Gdx.input.isKeyPressed(Input.Keys.A)|| controller.isLeftPressed()) && player.b2body.getLinearVelocity().x>=-2){
-            player.b2body.applyLinearImpulse(new Vector2(-impulseX,0),player.b2body.getWorldCenter(),true);
+        if ((Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A) || controller.isLeftPressed()) && player.b2body.getLinearVelocity().x >= -2) {
+            player.b2body.applyLinearImpulse(new Vector2(-impulseX, 0), player.b2body.getWorldCenter(), true);
         }
     }
-    public void update(float dt){
+
+    public void update(float dt) {
         //gestionar input
         handleInput(dt);
 
-        world.step((1/60f),6,2);
+        world.step((1 / 60f), 6, 2);
         player.update(dt);
 
         // ancla  la gamecam a la posicion x del jugador
-        gameCam.position.x=player.b2body.getPosition().x;
+        gameCam.position.x = player.b2body.getPosition().x;
         //actualizar cámara
         gameCam.update();
         //Ordenar al renderizador que renderice solo lo que puede ver la cámara del mundo del juego
@@ -142,7 +146,7 @@ this.manager=manager;
         //renderiza el mapa
         renderer.render();
         //rederiza las Box2DDebugLines
-        b2dr.render(world,gameCam.combined);
+        b2dr.render(world, gameCam.combined);
 
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
@@ -152,7 +156,9 @@ this.manager=manager;
         //establece el batch para dibujar lo que la camara del HUD ve
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
-        controller.draw();
+        if (Gdx.app.getType() == (Application.ApplicationType.Android)) {
+            controller.draw();
+        }
     }
 
     @Override
@@ -178,10 +184,10 @@ this.manager=manager;
 
     @Override
     public void dispose() {
-    map.dispose();
-    renderer.dispose();
-    world.dispose();
-    b2dr.dispose();
-    hud.dispose();
+        map.dispose();
+        renderer.dispose();
+        world.dispose();
+        b2dr.dispose();
+        hud.dispose();
     }
 }

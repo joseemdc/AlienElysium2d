@@ -9,6 +9,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.josema.alienelysium2d.screens.MainScreen;
 import com.josema.alienelysium2d.screens.PlayScreen;
 
 public class MyGdxGame extends Game {
@@ -30,7 +31,7 @@ public class MyGdxGame extends Game {
 		manager.load("audio/single-footstep.mp3", Sound.class);
 
 		manager.finishLoading();
-		setScreen(new PlayScreen(this,manager));
+		setScreen(new MainScreen(this,manager,batch));
 	}
 
 	@Override
