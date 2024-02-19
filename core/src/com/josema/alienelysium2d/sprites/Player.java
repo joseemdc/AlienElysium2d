@@ -7,17 +7,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.josema.alienelysium2d.MyGdxGame;
 import com.josema.alienelysium2d.screens.PlayScreen;
-
-import org.w3c.dom.Text;
-
-import java.awt.geom.RectangularShape;
 
 public class Player extends Sprite {
     public enum State {FAllING, JUMPING, STANDING, RUNNING}
@@ -74,8 +69,10 @@ public class Player extends Sprite {
             for (Object frame : playerRun.getKeyFrames()
             ) {
                 if (actualFrame.equals((TextureRegion) frame)) {
+    if(MyGdxGame.prefs.hasSoundEffects()){
 
                     manager.get("audio/single-footstep.mp3", Sound.class).play();
+    }
                 }
             }
 
