@@ -1,7 +1,5 @@
 package com.josema.alienelysium2d;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -9,12 +7,11 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.I18NBundle;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.josema.alienelysium2d.screens.MainScreen;
-import com.josema.alienelysium2d.screens.PlayScreen;
 import com.josema.alienelysium2d.tools.Prefs;
 
 import java.util.Locale;
@@ -28,6 +25,11 @@ public class MyGdxGame extends Game {
 
     public static final short DEFAULT_BIT = 1;
     public static final short PLAYER_BIT = 2;
+    public static FreeTypeFontGenerator generator;
+    public static FreeTypeFontGenerator.FreeTypeFontParameter parameter;
+    public static BitmapFont fontUi;
+
+    public static BitmapFont fontLogo;
 
     public SpriteBatch batch;
     public AssetManager manager;
@@ -49,6 +51,14 @@ public class MyGdxGame extends Game {
 //		 V_HEIGHT=Gdx.graphics.getHeight();
         prefs = new Prefs();
         manager.finishLoading();
+         generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/OxaniumRegular-JRRnn.ttf"));
+         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 35;
+         fontUi = generator.generateFont(parameter); // font size 12 pixels
+        parameter.size = 60;
+        fontLogo=generator.generateFont(parameter);
+        generator.dispose(); // don't forget to dispose to avoid memory leaks!
+
 
         FileHandle baseFileHandle = Gdx.files.internal("locale/MyBundle");
         Locale locale = new Locale("es","","");

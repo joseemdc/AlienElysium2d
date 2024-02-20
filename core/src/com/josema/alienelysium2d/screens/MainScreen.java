@@ -17,7 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.josema.alienelysium2d.MyGdxGame;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -32,6 +34,7 @@ public class MainScreen implements Screen {
     private AssetManager manager;
     private Viewport viewport;
     private Stage stage;
+    private Stage backgroundStage;
     private SpriteBatch sb;
     private Sprite backgroundSprite;
 
@@ -46,11 +49,14 @@ public class MainScreen implements Screen {
         VisUI.load();
         // Grafo de escena que contendrá todo el menú
         //stage = new Stage();
-        viewport = new ExtendViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
+        viewport = new FillViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
+        //viewport = new ScreenViewport(new OrthographicCamera());
         stage = new Stage(viewport, sb);
+
+
         // Crea una tabla, donde añadiremos los elementos de menú
         Table table = new Table();
-        table.right().top();
+        table.pad(50);
 
 
         //table.setPosition(MyGdxGame.V_WIDTH/MyGdxGame.PPM, MyGdxGame.V_HEIGHT/MyGdxGame.PPM);
@@ -60,17 +66,17 @@ public class MainScreen implements Screen {
         stage.addActor(table);
 
         // Etiqueta de texto
-        Label label = new Label("Alien Elysium \n 2d Edition", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        Label label = new Label("Alien Elysium \n 2d Edition", new Label.LabelStyle(MyGdxGame.fontLogo, Color.WHITE));
         //label.setAlignment(GroupLayout.Alignment.CENTER.ordinal());
         label.setAlignment(Alignment.CENTER.ordinal());
-        table.add(label).expandX();
+        table.add(label).expandX().size(350,100).padTop(20).padBottom(20);
         table.row().left();
 
         // Botón
         TextButton buttonPlay = new TextButton(MyGdxGame.myBundle.get("newGame"), new Skin(Gdx.files.internal("skin/uiskin.json")));
         //buttonPlay.setPosition(label.getOriginX(), label.getOriginY() - 120);
-        buttonPlay.setWidth(200);
-        buttonPlay.setHeight(40);
+        buttonPlay.setWidth(200/MyGdxGame.PPM);
+        buttonPlay.setHeight(40/MyGdxGame.PPM);
         buttonPlay.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -83,12 +89,12 @@ public class MainScreen implements Screen {
                 Gdx.app.log("Click", "Cambiar pantalla");
             }
         });
-        table.add(buttonPlay).expandX().padLeft(10).padTop(5).padBottom(5);
+        table.add(buttonPlay).expandX().padLeft(10).padTop(5).padBottom(5).size(200,60);
         table.row().left();
 
         // Botón
         TextButton buttonHistory = new TextButton(MyGdxGame.myBundle.get("achievements"), new Skin(Gdx.files.internal("skin/uiskin.json")));
-        buttonHistory.setPosition(label.getOriginX(), label.getOriginY() - 170);
+        //buttonHistory.setPosition(label.getOriginX(), label.getOriginY() - 170);
         buttonHistory.setWidth(200);
         buttonHistory.setHeight(40);
         buttonHistory.addListener(new InputListener() {
@@ -102,7 +108,7 @@ public class MainScreen implements Screen {
                 game.setScreen(new PlayScreen(game, manager));
             }
         });
-        table.add(buttonHistory).expandX().padLeft(10).padTop(5).padBottom(5);
+        table.add(buttonHistory).expandX().padLeft(10).padTop(5).padBottom(5).size(200,60);
         table.row().left();
 
         // Botón
@@ -125,11 +131,11 @@ public class MainScreen implements Screen {
                 Gdx.input.vibrate(Input.VibrationType.HEAVY);
                 }
                 dispose();
-                game.setScreen(new SettingsScreen(game, manager,MainScreen.this));
+                game.setScreen(new SettingsScreen(game, manager,MainScreen.this,sb));
                 Gdx.app.log("Click", "Cambiar pantalla");
             }
         });
-        table.add(buttonConfig).expandX().padLeft(10).padTop(5).padBottom(5);
+        table.add(buttonConfig).expandX().padLeft(10).padTop(5).padBottom(5).size(200,60);
         table.row().left();
 
         // Botón
@@ -148,7 +154,7 @@ public class MainScreen implements Screen {
                 System.exit(0);
             }
         });
-        table.add(buttonQuit).expandX().padLeft(10).padTop(5).padBottom(5);
+        table.add(buttonQuit).expandX().padLeft(10).padTop(5).padBottom(5).size(200,60);
         table.debugAll();
 
 
@@ -157,24 +163,24 @@ public class MainScreen implements Screen {
 
     @Override
     public void show() {
-        sb.begin();
+
         backgroundSprite =new Sprite(manager.get("images/background.png", Texture.class));
         //backgroundSprite.setSize(MyGdxGame.V_WIDTH/MyGdxGame.PPM,MyGdxGame.V_HEIGHT/MyGdxGame.PPM);
-        //backgroundSprite.draw(sb);
-        sb.draw(backgroundSprite,Gdx.graphics.getHeight(),Gdx.graphics.getWidth());
+
+      //  sb.draw(backgroundSprite,MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT);
 
         loadScreen();
-        sb.end();
+
     }
 
     @Override
     public void render(float delta) {
         //limpia la pantalla
-        //Gdx.gl.glClearColor(0, 0, 0, 1);
-        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         sb.begin();
-        //backgroundSprite.draw(sb);
-        sb.draw(backgroundSprite,MyGdxGame.V_WIDTH/MyGdxGame.PPM,MyGdxGame.V_HEIGHT/MyGdxGame.PPM);
+        backgroundSprite.draw(sb);
+       // sb.draw(backgroundSprite,MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT);
         sb.end();
 // Pinta el menú
         stage.act(delta);
@@ -184,6 +190,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
+       //viewport.update();
 
     }
 
