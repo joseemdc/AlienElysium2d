@@ -18,10 +18,10 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 
 public class MyGdxGame extends Game {
-    public static int V_WIDTH = 960;
-    public static int V_HEIGHT = 540;
+    public static int V_WIDTH = 720;
+    public static int V_HEIGHT = 420;
 
-    public static final float PPM = 100;
+    public static final float PPM = 50;
 
     public static final short DEFAULT_BIT = 1;
     public static final short PLAYER_BIT = 2;
@@ -45,6 +45,7 @@ public class MyGdxGame extends Game {
         manager.load("audio/spaceship-ambience-with-effects-21420.mp3", Music.class);
         manager.load("audio/single-footstep.mp3", Sound.class);
         manager.load("images/background.png", Texture.class);
+        manager.load("locale/MyBundle", I18NBundle.class);
         //manager.load("locale/MyBundle", I18NBundle.class);
         //backgroundTexture = new Texture("images/background.png");
 //	 V_WIDTH= Gdx.graphics.getWidth();
@@ -61,14 +62,12 @@ public class MyGdxGame extends Game {
 
 
         FileHandle baseFileHandle = Gdx.files.internal("locale/MyBundle");
-        Locale locale = new Locale("es","","");
+        Locale locale = new Locale(prefs.getLang());
 
-    try{
 
-         myBundle = I18NBundle.createBundle(baseFileHandle, locale);
-    }catch (MissingResourceException ex){
-        myBundle= I18NBundle.createBundle(Gdx.files.internal("locale/MyBundle"),Locale.getDefault());
-    }
+
+         myBundle = I18NBundle.createBundle(baseFileHandle, locale,"UTF-8");
+
       // myBundle= manager.get("locale/MyBundle", I18NBundle.class);
         setScreen(new MainScreen(this, manager, batch));
     }

@@ -8,11 +8,14 @@ public class Prefs {
     private boolean hasMusic;
     private boolean hasSoundEffects;
     private boolean hasHaptic;
+    private String lang;
     private int completedLevel;
 
     public Prefs(){
         pref = Gdx.app.getPreferences("My Prefs");
         hasMusic = pref.getBoolean("hasSound",true);
+        hasHaptic = pref.getBoolean("hasHaptic",true);
+        lang= pref.getString("lang","");
         completedLevel=pref.getInteger("level",0);
     }
     public void setMusic(boolean hasMusic){
@@ -40,6 +43,14 @@ public class Prefs {
     }
     public boolean hasHaptic(){
         return hasHaptic;
+    }
+    public void setLang(String lang){
+        this.lang=lang;
+        pref.putString("lang",lang);
+        pref.flush();
+    }
+    public String getLang(){
+        return lang;
     }
 
     //should be called once when we need to increase my level

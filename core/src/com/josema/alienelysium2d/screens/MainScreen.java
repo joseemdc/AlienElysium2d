@@ -47,6 +47,10 @@ public class MainScreen implements Screen {
 
     public void loadScreen() {
         VisUI.load();
+        TextButton.TextButtonStyle textButtonStyle= new TextButton.TextButtonStyle();
+        textButtonStyle.font=MyGdxGame.fontUi;
+        textButtonStyle.fontColor=Color.WHITE;
+        Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         // Grafo de escena que contendrá todo el menú
         //stage = new Stage();
         viewport = new FillViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
@@ -66,17 +70,23 @@ public class MainScreen implements Screen {
         stage.addActor(table);
 
         // Etiqueta de texto
-        Label label = new Label("Alien Elysium \n 2d Edition", new Label.LabelStyle(MyGdxGame.fontLogo, Color.WHITE));
+        Label label = new Label("Alien Elysium\n2d Edition", new Label.LabelStyle(MyGdxGame.fontLogo, Color.WHITE));
         //label.setAlignment(GroupLayout.Alignment.CENTER.ordinal());
         label.setAlignment(Alignment.CENTER.ordinal());
-        table.add(label).expandX().size(350,100).padTop(20).padBottom(20);
+        table.add(label).expandX().size(9000f/MyGdxGame.PPM,2000f/MyGdxGame.PPM).padTop(20).padBottom(20);
         table.row().left();
 
         // Botón
-        TextButton buttonPlay = new TextButton(MyGdxGame.myBundle.get("newGame"), new Skin(Gdx.files.internal("skin/uiskin.json")));
+        TextButton buttonPlay = new TextButton(MyGdxGame.myBundle.get("newGame"), skin);
         //buttonPlay.setPosition(label.getOriginX(), label.getOriginY() - 120);
-        buttonPlay.setWidth(200/MyGdxGame.PPM);
-        buttonPlay.setHeight(40/MyGdxGame.PPM);
+        textButtonStyle= buttonPlay.getStyle();
+
+        textButtonStyle.font=MyGdxGame.fontUi;
+        buttonPlay.setStyle(textButtonStyle);
+        buttonPlay.setSkin(skin);
+       // buttonPlay.setWidth(200/MyGdxGame.PPM);
+        //buttonPlay.setHeight(40/MyGdxGame.PPM);
+        buttonPlay.getLabel().setFontScale(0.7f);
         buttonPlay.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -89,15 +99,18 @@ public class MainScreen implements Screen {
                 Gdx.app.log("Click", "Cambiar pantalla");
             }
         });
-        table.add(buttonPlay).expandX().padLeft(10).padTop(5).padBottom(5).size(200,60);
+        table.add(buttonPlay).expandX().padLeft(10).padTop(5).padBottom(5).size(9000f/MyGdxGame.PPM,2000f/MyGdxGame.PPM);
         table.row().left();
 
         // Botón
-        TextButton buttonHistory = new TextButton(MyGdxGame.myBundle.get("achievements"), new Skin(Gdx.files.internal("skin/uiskin.json")));
-        //buttonHistory.setPosition(label.getOriginX(), label.getOriginY() - 170);
-        buttonHistory.setWidth(200);
-        buttonHistory.setHeight(40);
-        buttonHistory.addListener(new InputListener() {
+        TextButton buttonAchievements = new TextButton(MyGdxGame.myBundle.get("achievements"), skin);
+        //buttonAchievements.setPosition(label.getOriginX(), label.getOriginY() - 170);
+        buttonAchievements.setStyle(textButtonStyle);
+        buttonAchievements.setSkin(skin);
+        buttonAchievements.setWidth(200);
+        buttonAchievements.setHeight(40);
+        buttonAchievements.getLabel().setFontScale(0.7f);
+        buttonAchievements.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
             }
@@ -108,14 +121,17 @@ public class MainScreen implements Screen {
                 game.setScreen(new PlayScreen(game, manager));
             }
         });
-        table.add(buttonHistory).expandX().padLeft(10).padTop(5).padBottom(5).size(200,60);
+        table.add(buttonAchievements).expandX().padLeft(10).padTop(5).padBottom(5).size(9000f/MyGdxGame.PPM,2000f/MyGdxGame.PPM);
         table.row().left();
 
         // Botón
-        TextButton buttonConfig = new TextButton(MyGdxGame.myBundle.get("settings"), new Skin(Gdx.files.internal("skin/uiskin.json")));
-        buttonConfig.setPosition(label.getOriginX(), label.getOriginY() - 220);
+        TextButton buttonConfig = new TextButton(MyGdxGame.myBundle.get("settings"),skin);
+        //buttonConfig.setPosition(label.getOriginX(), label.getOriginY() - 220);
+        buttonConfig.setStyle(textButtonStyle);
+        buttonConfig.setSkin(skin);
         buttonConfig.setWidth(200);
         buttonConfig.setHeight(40);
+        buttonConfig.getLabel().setFontScale(0.7f);
         buttonConfig.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if(MyGdxGame.prefs.hasHaptic()){
@@ -131,19 +147,23 @@ public class MainScreen implements Screen {
                 Gdx.input.vibrate(Input.VibrationType.HEAVY);
                 }
                 dispose();
+
                 game.setScreen(new SettingsScreen(game, manager,MainScreen.this,sb));
                 Gdx.app.log("Click", "Cambiar pantalla");
             }
         });
-        table.add(buttonConfig).expandX().padLeft(10).padTop(5).padBottom(5).size(200,60);
+        table.add(buttonConfig).expandX().padLeft(10).padTop(5).padBottom(5).size(9000f/MyGdxGame.PPM,2000f/MyGdxGame.PPM);
         table.row().left();
 
         // Botón
-        TextButton buttonQuit = new TextButton(MyGdxGame.myBundle.get("credits"), new Skin(Gdx.files.internal("skin/uiskin.json")));
-        buttonQuit.setPosition(label.getOriginX(), label.getOriginY() - 270);
-        buttonQuit.setWidth(200);
-        buttonQuit.setHeight(40);
-        buttonQuit.addListener(new InputListener() {
+        TextButton buttonCredits = new TextButton(MyGdxGame.myBundle.get("credits"), skin);
+       // buttonCredits.setPosition(label.getOriginX(), label.getOriginY() - 270);
+        buttonCredits.setStyle(textButtonStyle);
+        buttonCredits.setSkin(skin);
+        buttonCredits.setWidth(200);
+        buttonCredits.setHeight(40);
+        buttonCredits.getLabel().setFontScale(0.7f);
+        buttonCredits.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
             }
@@ -154,7 +174,7 @@ public class MainScreen implements Screen {
                 System.exit(0);
             }
         });
-        table.add(buttonQuit).expandX().padLeft(10).padTop(5).padBottom(5).size(200,60);
+        table.add(buttonCredits).expandX().padLeft(10).padTop(5).padBottom(5).size(9000f/MyGdxGame.PPM,2000f/MyGdxGame.PPM);
         table.debugAll();
 
 
@@ -165,7 +185,7 @@ public class MainScreen implements Screen {
     public void show() {
 
         backgroundSprite =new Sprite(manager.get("images/background.png", Texture.class));
-        //backgroundSprite.setSize(MyGdxGame.V_WIDTH/MyGdxGame.PPM,MyGdxGame.V_HEIGHT/MyGdxGame.PPM);
+        backgroundSprite.setSize(MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT);
 
       //  sb.draw(backgroundSprite,MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT);
 
@@ -180,7 +200,7 @@ public class MainScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         sb.begin();
         backgroundSprite.draw(sb);
-       // sb.draw(backgroundSprite,MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT);
+        //sb.draw(backgroundSprite,MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT);
         sb.end();
 // Pinta el menú
         stage.act(delta);
@@ -190,7 +210,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-       //viewport.update();
+       viewport.update(width, height);
 
     }
 

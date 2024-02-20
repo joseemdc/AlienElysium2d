@@ -18,6 +18,7 @@ public class Hud implements Disposable {
     private Integer worldTimer;
     private float timeCount;
     private Integer score;
+    private SpriteBatch sb;
 
     Label countdownLabel;
     Label scoreLabel;
@@ -31,6 +32,7 @@ public class Hud implements Disposable {
         worldTimer=300;
         timeCount=0;
         score=0;
+        this.sb=sb;
 
         viewport=new FitViewport(MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT, new OrthographicCamera());
         stage= new Stage(viewport,sb);

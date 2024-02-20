@@ -17,6 +17,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.josema.alienelysium2d.MyGdxGame;
 import com.josema.alienelysium2d.scenes.Hud;
@@ -55,7 +57,7 @@ public class PlayScreen implements Screen {
 
         gameCam = new OrthographicCamera();
         //crear un FitViewport para mantener la relación de aspecto a pesar del tamaño de la pantalla
-        gamePort = new ExtendViewport(MyGdxGame.V_WIDTH / MyGdxGame.PPM, MyGdxGame.V_HEIGHT / MyGdxGame.PPM, gameCam);
+        gamePort = new FillViewport(MyGdxGame.V_WIDTH/100f , MyGdxGame.V_HEIGHT/100f , gameCam);
 
         //crear el HUD para la informacion en pantalla
         hud = new Hud(game.batch);
@@ -64,11 +66,14 @@ public class PlayScreen implements Screen {
         //cargar el mapa y establecer el renderizador del mapa
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("level1.tmx");
-        renderer = new OrthogonalTiledMapRenderer(map, 1 / MyGdxGame.PPM);
+
+        renderer = new OrthogonalTiledMapRenderer(map,1/(MyGdxGame.PPM));
+
         //poner centrada la cámara al inicio del mapa
-        gameCam.position.set((float) gamePort.getWorldWidth() / 2, (float) gamePort.getWorldHeight() / 2, 0);
+        gameCam.position.set((float) gamePort.getWorldWidth()/2 , (float) gamePort.getWorldHeight() /2, 0);
         //crea un mundo Box2d
         world = new World(new Vector2(0, -10), true);
+
         //mostrar debug lines del mapa
         b2dr = new Box2DDebugRenderer();
 
