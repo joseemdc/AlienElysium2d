@@ -9,6 +9,8 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -31,13 +33,15 @@ import com.josema.alienelysium2d.tools.WorldContactListener;
 public class PlayScreen implements Screen {
     //Referencia del juego, usado para establecer pantallas
     private MyGdxGame game;
-
+    private Sprite backgroundSprite;
     private TextureAtlas atlas;
     private  TextureAtlas atlas2;
     //variables báscias del PlayScreen
     Texture texture;
     private OrthographicCamera gameCam;
+    private OrthographicCamera backCam;
     private Viewport gamePort;
+    private  Viewport backviewPort;
     private Hud hud;
     //Tiled map variables
     private TmxMapLoader mapLoader;
@@ -67,8 +71,10 @@ public class PlayScreen implements Screen {
         this.game = game;
 
         gameCam = new OrthographicCamera();
+        backCam = new OrthographicCamera();
         //crear un FitViewport para mantener la relación de aspecto a pesar del tamaño de la pantalla
-        gamePort = new FitViewport((float) MyGdxGame.V_WIDTH /100 , (float) MyGdxGame.V_HEIGHT /100 , gameCam);
+        gamePort = new FillViewport((float) MyGdxGame.V_WIDTH /100 , (float) MyGdxGame.V_HEIGHT /100 , gameCam);
+        backviewPort = new FillViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
 
         //crear el HUD para la informacion en pantalla
         hud = new Hud(game.batch);
@@ -112,7 +118,8 @@ public class PlayScreen implements Screen {
 
     @Override
     public void show() {
-
+        backgroundSprite =new Sprite(manager.get("images/background.png", Texture.class));
+        backgroundSprite.setSize(MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT);
     }
 
     public void handleInput(float dt) {
@@ -156,13 +163,18 @@ public class PlayScreen implements Screen {
         //limpia la pantalla
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+      //  game.batch.setProjectionMatrix(backCam.combined);
+        game.batch.begin();
+        backgroundSprite.draw(game.batch);
+        game.batch.end();
+
         //renderiza el mapa
         renderer.render();
         //rederiza las Box2DDebugLines
         b2dr.render(world, gameCam.combined);
-
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
+       //
         player.draw(game.batch);
         alien.draw(game.batch);
         game.batch.end();

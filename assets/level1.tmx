@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="6">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="10">
  <tileset firstgid="1" source="SciFi indoors tileset/Level1WorldTileSheet.tsx"/>
+ <tileset firstgid="3137" source="SciFi indoors tileset/Level1WorldTileSheet.tsx"/>
  <layer id="1" name="background" width="240" height="13">
   <data encoding="base64" compression="zlib">
-   eJztwzENAAAMA6Ae8y+hWqtiHyT0kqqqqqqqqqqqqqqqqj4e1hm2yg==
+   eJztwTEBAAAAwqD1T20KP6AAAAAAAAAAAAAAAAC+BjDAAAE=
+  </data>
+ </layer>
+ <layer id="7" name="interiorbackground" width="240" height="13" opacity="0.5">
+  <data encoding="base64" compression="zlib">
+   eJzt1aENACAUQ0EsDsNe7D8NK8AXFHGXdISXtgYAAJwa/Y8B99Ld6hfq0t3qF+rS3eoX6m4aW1O/8JP07+oX6tLd6hcAAIAXNgqXF4s=
   </data>
  </layer>
  <layer id="2" name="graphics" width="240" height="13">
   <data encoding="base64" compression="zlib">
-   eJzt08kNgmAAhNH/ROhIXHpywYSSBLUn10KYEjwYDPG95LvPZUoBAAAAAIBpLepSmrRMq7ROm/rXq4BPbPPVXdqnQ2rT0X9hFk75ap+GdE6XdPVfmIVbvnpPj/RMr/T2XwAA/lhXTR/wHSOjMhwu
+   eJzt08EJgDAABMHThzaqxaYrW0geQg5mYEvYBAAAmPVcybtBwLrhHajlX+jlX+jlX+jlX+h13Mm5QQAAAPCnDx+bE3I=
   </data>
  </layer>
  <objectgroup id="3" name="ground">
-  <object id="4" x="36" y="220.667"/>
-  <object id="5" x="1.33333" y="192.667" width="462.667" height="13.3333"/>
+  <object id="5" x="10.6667" y="151.334" width="532" height="7.99997"/>
+  <object id="8" x="10.6667" y="54" width="532" height="7.99997"/>
+  <object id="9" x="3.33333" y="62.6667" width="8" height="88"/>
  </objectgroup>
  <objectgroup id="4" name="pipes"/>
  <objectgroup id="5" name="bricks"/>

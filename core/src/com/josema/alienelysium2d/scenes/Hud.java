@@ -50,14 +50,18 @@ public class Hud implements Disposable {
         table.padTop(500/MyGdxGame.PPM).padLeft(1000/MyGdxGame.PPM).padRight(1000/MyGdxGame.PPM);
         table.setFillParent(true);
 
-        countdownLabel= new Label(String.format("%03d",worldTimer),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        scoreLabel= new Label(String.format("%06d",score),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        countdownLabel= new Label(String.format("%03d",worldTimer),new Label.LabelStyle(MyGdxGame.fontUi, Color.WHITE));
+        scoreLabel= new Label(String.format("%06d",score),new Label.LabelStyle(MyGdxGame.fontUi, Color.WHITE));
         healthBar = new HealthBar((int) (100/MyGdxGame.PPM), (int) (300/MyGdxGame.PPM));
-        timeLabel= new Label("TIME",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        levelLabel= new Label("1-1",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        worldLabel= new Label("SECTOR",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        playerLabel= new Label("PLAYER",new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-
+        timeLabel= new Label("TIME",new Label.LabelStyle(MyGdxGame.fontUi, Color.WHITE));
+        levelLabel= new Label("1-1",new Label.LabelStyle(MyGdxGame.fontUi, Color.WHITE));
+        worldLabel= new Label("SECTOR",new Label.LabelStyle(MyGdxGame.fontUi, Color.WHITE));
+        playerLabel= new Label("PLAYER",new Label.LabelStyle(MyGdxGame.fontUi, Color.WHITE));
+playerLabel.setFontScale(0.7f);
+        worldLabel.setFontScale(0.7f);
+        levelLabel.setFontScale(0.7f);
+        timeLabel.setFontScale(0.7f);
+        countdownLabel.setFontScale(0.7f);
         table.add(playerLabel).expandX().padTop(10).left();
         table.add(worldLabel).expandX().padTop(10).center();
         table.add(timeLabel).expandX().padTop(10).right();
