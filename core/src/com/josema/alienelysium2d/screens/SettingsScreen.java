@@ -89,7 +89,7 @@ public class SettingsScreen implements Screen {
 
         // Crea una tabla, donde añadiremos los elementos de menú
         Table table = new Table();
-        table.pad(30);
+        table.pad(2000/MyGdxGame.PPM);
 
         // La tabla ocupa toda la pantalla
         table.setFillParent(true);
@@ -98,7 +98,7 @@ public class SettingsScreen implements Screen {
         // Etiqueta de texto
         label = new Label(MyGdxGame.myBundle.get("settings"), new Label.LabelStyle(MyGdxGame.fontLogo, Color.WHITE));
         //label.setAlignment(GroupLayout.Alignment.CENTER.ordinal());
-        table.add(label).expandX().padBottom(20);
+        table.add(label).expandX().padBottom(20).size(9000f/MyGdxGame.PPM,2000f/MyGdxGame.PPM);
         table.row();
 
 
@@ -119,10 +119,10 @@ public class SettingsScreen implements Screen {
         hapticCheck.setSkin(skin);
 
 
-        hapticCheck.setWidth(200);
-        hapticCheck.setHeight(80);
+        //hapticCheck.setWidth(200);
+       // hapticCheck.setHeight(80);
         hapticCheck.getLabelCell().padLeft(10);
-        hapticCheck.getImageCell().size(35,35);
+        hapticCheck.getImageCell().size(1000f/MyGdxGame.PPM,1000f/MyGdxGame.PPM);
         hapticCheck.getImage().setScaling(Scaling.fill);
         hapticCheck.center();
 
@@ -154,7 +154,7 @@ public class SettingsScreen implements Screen {
 
             }
         });
-        table.add(hapticCheck).expandX().pad(10).size(400,40);
+        table.add(hapticCheck).expandX().pad(5).size(9000f/MyGdxGame.PPM,1000f/MyGdxGame.PPM);
         table.row();
 
         musicaCheck = new CheckBox(MyGdxGame.myBundle.get("music"), skin);
@@ -163,7 +163,7 @@ public class SettingsScreen implements Screen {
         musicaCheck.setWidth(200);
         musicaCheck.setHeight(40);
         musicaCheck.getLabelCell().padLeft(10);
-        musicaCheck.getImageCell().size(35,35);
+        musicaCheck.getImageCell().size(1000f/MyGdxGame.PPM,1000f/MyGdxGame.PPM);
         musicaCheck.getImage().setScaling(Scaling.fill);
         musicaCheck.center();
 
@@ -195,7 +195,7 @@ public class SettingsScreen implements Screen {
 
             }
         });
-        table.add(musicaCheck).expandX().pad(10).size(400,40);
+        table.add(musicaCheck).expandX().pad(10).size(9000f/MyGdxGame.PPM,1000f/MyGdxGame.PPM);
         table.row();
 
         soundEffectsCheck = new CheckBox(MyGdxGame.myBundle.get("soundEffects"), skin);
@@ -204,7 +204,7 @@ public class SettingsScreen implements Screen {
         soundEffectsCheck.setWidth(200);
         soundEffectsCheck.setHeight(40);
         soundEffectsCheck.getLabelCell().padLeft(10);
-        soundEffectsCheck.getImageCell().size(35,35);
+        soundEffectsCheck.getImageCell().size(1000f/MyGdxGame.PPM,1000f/MyGdxGame.PPM);
         soundEffectsCheck.getImage().setScaling(Scaling.fill);
         soundEffectsCheck.center();
 
@@ -236,7 +236,7 @@ public class SettingsScreen implements Screen {
 
             }
         });
-        table.add(soundEffectsCheck).expandX().pad(10).size(400,40);
+        table.add(soundEffectsCheck).expandX().pad(10).size(9000f/MyGdxGame.PPM,1000f/MyGdxGame.PPM);
         table.row();
         HorizontalGroup languageGroup= new HorizontalGroup();
 
@@ -255,6 +255,7 @@ public class SettingsScreen implements Screen {
 
         langSelect.getList().setStyle(listStyle);
         langSelect.setStyle(selectBoxStyle);
+        langSelect.setSize(9000f/MyGdxGame.PPM,1000f/MyGdxGame.PPM);
 
         String[] languages = new String[]{"Español", "English"};
         langSelect.addListener(new ChangeListener() {
@@ -318,11 +319,14 @@ bundle=  I18NBundle.createBundle(baseFileHandle, locale,"UTF-8");
             case "en":
                 selectedIndex=1;
                 break;
+            default:
+                selectedIndex=1;
+                break;
         }
 
         langSelect.setSelectedIndex(selectedIndex);
     languageGroup.addActor(langSelect);
-        table.add(languageGroup).pad(10);
+        table.add(languageGroup).pad(10).size(9000f/MyGdxGame.PPM,1000f/MyGdxGame.PPM);
         table.row();
 
 
@@ -359,13 +363,13 @@ bundle=  I18NBundle.createBundle(baseFileHandle, locale,"UTF-8");
                 Gdx.app.log("Click", "Cambiar pantalla");
             }
         });
-        table.add(buttonBack).expandX().pad(10).size(200,60);
+        table.add(buttonBack).expandX().pad(10).size(9000f/MyGdxGame.PPM,2000f/MyGdxGame.PPM);
         table.row();
 
 
 
 
-       // table.debugAll();
+        table.debugAll();
         Gdx.input.setInputProcessor(stage);
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
 

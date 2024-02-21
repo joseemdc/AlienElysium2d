@@ -10,9 +10,12 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.josema.alienelysium2d.MyGdxGame;
+import com.josema.alienelysium2d.screens.PlayScreen;
 
 public class B2WorldCreator {
-    public B2WorldCreator(World world, TiledMap map){
+    public B2WorldCreator(PlayScreen screen){
+        World world=screen.getWorld();
+        TiledMap map=screen.getMap();
 //crear variables body y fixture
         BodyDef bdef= new BodyDef();
         PolygonShape shape = new PolygonShape();

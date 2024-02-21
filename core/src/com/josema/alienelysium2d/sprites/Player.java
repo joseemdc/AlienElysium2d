@@ -31,9 +31,9 @@ public class Player extends Sprite {
     private TextureRegion previousFrame;
 
 
-    public Player(World world, PlayScreen screen, AssetManager manager) {
+    public Player( PlayScreen screen, AssetManager manager) {
         super(screen.getAtlas().findRegion("scifiMan"));
-        this.world = world;
+        this.world = screen.getWorld();
         this.manager = manager;
         currentState = State.STANDING;
         previousState = State.STANDING;
@@ -140,7 +140,7 @@ public class Player extends Sprite {
         //shape.setRadius(6 / MyGdxGame.PPM);
 
         fdef.filter.categoryBits = MyGdxGame.PLAYER_BIT;
-        fdef.filter.maskBits = MyGdxGame.DEFAULT_BIT;
+        fdef.filter.maskBits = MyGdxGame.GROUND_BIT |MyGdxGame.ENEMY_BIT;
         fdef.shape = shape;
 
         b2body.createFixture(fdef);

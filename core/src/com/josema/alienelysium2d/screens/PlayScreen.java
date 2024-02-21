@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.josema.alienelysium2d.MyGdxGame;
 import com.josema.alienelysium2d.scenes.Hud;
+import com.josema.alienelysium2d.sprites.Alien;
 import com.josema.alienelysium2d.sprites.Player;
 import com.josema.alienelysium2d.tools.B2WorldCreator;
 import com.josema.alienelysium2d.tools.Controller;
@@ -32,6 +33,7 @@ public class PlayScreen implements Screen {
     private MyGdxGame game;
 
     private TextureAtlas atlas;
+    private  TextureAtlas atlas2;
     //variables báscias del PlayScreen
     Texture texture;
     private OrthographicCamera gameCam;
@@ -46,18 +48,27 @@ public class PlayScreen implements Screen {
     private World world;
     private Box2DDebugRenderer b2dr;
     private Player player;
+    private Alien alien;
     private AssetManager manager;
     private Music music;
     private Controller controller;
+    public enum State
+    {
+        PAUSE,
+        RUN,
+        RESUME,
+        STOPPED
+    }
 
     public PlayScreen(MyGdxGame game, AssetManager manager) {
 
         atlas = new TextureAtlas("player_and_enemy.atlas");
+        atlas2= new TextureAtlas("alien.atlas");
         this.game = game;
 
         gameCam = new OrthographicCamera();
         //crear un FitViewport para mantener la relación de aspecto a pesar del tamaño de la pantalla
-        gamePort = new FillViewport(MyGdxGame.V_WIDTH/100f , MyGdxGame.V_HEIGHT/100f , gameCam);
+        gamePort = new FitViewport((float) MyGdxGame.V_WIDTH /100 , (float) MyGdxGame.V_HEIGHT /100 , gameCam);
 
         //crear el HUD para la informacion en pantalla
         hud = new Hud(game.batch);
@@ -77,10 +88,11 @@ public class PlayScreen implements Screen {
         //mostrar debug lines del mapa
         b2dr = new Box2DDebugRenderer();
 
-        new B2WorldCreator(world, map);
+        new B2WorldCreator(this);
         //crea un personaje en nuestro juego
         this.manager = manager;
-        player = new Player(world, this, manager);
+        player = new Player( this, manager);
+        alien= new Alien(this,.32f,.32f);
 
         world.setContactListener(new WorldContactListener(manager));
         music = manager.get("audio/spaceship-ambience-with-effects-21420.mp3", Music.class);
@@ -93,6 +105,9 @@ public class PlayScreen implements Screen {
 
     public TextureAtlas getAtlas() {
         return atlas;
+    }
+    public TextureAtlas getAtlas2() {
+        return atlas2;
     }
 
     @Override
@@ -124,6 +139,7 @@ public class PlayScreen implements Screen {
 
         world.step((1 / 60f), 6, 2);
         player.update(dt);
+        alien.update(dt);
 
         // ancla  la gamecam a la posicion x del jugador
         gameCam.position.x = player.b2body.getPosition().x;
@@ -148,6 +164,7 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
         player.draw(game.batch);
+        alien.draw(game.batch);
         game.batch.end();
 
         //establece el batch para dibujar lo que la camara del HUD ve
@@ -162,6 +179,12 @@ public class PlayScreen implements Screen {
     public void resize(int width, int height) {
         gamePort.update(width, height);
         controller.resize(width, height);
+    }
+    public TiledMap getMap(){
+        return map;
+    }
+    public World getWorld(){
+        return world;
     }
 
     @Override

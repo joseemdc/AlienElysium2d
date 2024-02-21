@@ -60,7 +60,7 @@ public class MainScreen implements Screen {
 
         // Crea una tabla, donde añadiremos los elementos de menú
         Table table = new Table();
-        table.pad(50);
+        table.padLeft(2000/MyGdxGame.PPM).padRight(2000/MyGdxGame.PPM);
 
 
         //table.setPosition(MyGdxGame.V_WIDTH/MyGdxGame.PPM, MyGdxGame.V_HEIGHT/MyGdxGame.PPM);

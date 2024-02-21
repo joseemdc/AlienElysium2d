@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.josema.alienelysium2d.MyGdxGame;
@@ -24,7 +25,7 @@ public class Controller {
     boolean touchJustPressed = false;
     public Controller(Batch batch){
         camera = new OrthographicCamera();
-        viewport = new FitViewport(MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT,camera);
+        viewport = new FillViewport(MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT,camera);
         stage = new Stage(viewport,batch);
         Gdx.input.setInputProcessor(stage);
 
@@ -32,7 +33,7 @@ public class Controller {
         table.left().bottom();
 
         Image upImg = new Image(new Texture("controls/tile_up.png"));
-        upImg.setSize(50,50);
+        upImg.setSize(4000/MyGdxGame.PPM,4000/MyGdxGame.PPM);
         upImg.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -46,7 +47,7 @@ public class Controller {
             }
         });
         Image leftImg = new Image(new Texture("controls/tile_left.png"));
-        leftImg.setSize(50,50);
+        leftImg.setSize(4000/MyGdxGame.PPM,4000/MyGdxGame.PPM);
         leftImg.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -60,7 +61,7 @@ public class Controller {
             }
         });
         Image rightImg = new Image(new Texture("controls/tile_right.png"));
-        rightImg.setSize(0.5f*MyGdxGame.PPM,0.5f*MyGdxGame.PPM);
+        rightImg.setSize(4000/MyGdxGame.PPM,4000/MyGdxGame.PPM);
         rightImg.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -73,6 +74,10 @@ public class Controller {
                 rightPressed = false;
             }
         });
+        table.padLeft(1000/MyGdxGame.PPM);
+        table.padBottom(1000/MyGdxGame.PPM);
+        table.setWidth(MyGdxGame.V_WIDTH);
+
         table.add();
         table.add();
         table.add();
@@ -81,13 +86,13 @@ public class Controller {
         table.add(leftImg).size(leftImg.getWidth(),leftImg.getHeight());
         table.add();
         table.add(rightImg).size(rightImg.getWidth(),rightImg.getHeight());
-        table.add(upImg).size(upImg.getWidth(),upImg.getHeight()).right().expandX().padLeft(200);
+        table.add(upImg).size(upImg.getWidth(),upImg.getHeight()).right().expandX().right();
         table.row().padBottom(5);
         table.add();
         table.add();
         table.add();
         table.add();
-
+table.debugAll();
         stage.addActor(table);
 
     }

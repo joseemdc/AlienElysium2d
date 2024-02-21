@@ -15,16 +15,16 @@ import com.josema.alienelysium2d.screens.MainScreen;
 import com.josema.alienelysium2d.tools.Prefs;
 
 import java.util.Locale;
-import java.util.MissingResourceException;
 
 public class MyGdxGame extends Game {
-    public static int V_WIDTH = 720;
-    public static int V_HEIGHT = 420;
+    public static int V_WIDTH = 800;
+    public static int V_HEIGHT = 390;
 
-    public static final float PPM = 50;
+    public static final float PPM = 50f;
 
-    public static final short DEFAULT_BIT = 1;
+    public static final short GROUND_BIT = 1;
     public static final short PLAYER_BIT = 2;
+    public static  final short ENEMY_BIT=4;
     public static FreeTypeFontGenerator generator;
     public static FreeTypeFontGenerator.FreeTypeFontParameter parameter;
     public static BitmapFont fontUi;
@@ -54,9 +54,9 @@ public class MyGdxGame extends Game {
         manager.finishLoading();
          generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/OxaniumRegular-JRRnn.ttf"));
          parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 35;
+        parameter.size = 20;
          fontUi = generator.generateFont(parameter); // font size 12 pixels
-        parameter.size = 60;
+        parameter.size =45;
         fontLogo=generator.generateFont(parameter);
         generator.dispose(); // don't forget to dispose to avoid memory leaks!
 
