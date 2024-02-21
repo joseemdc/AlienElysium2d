@@ -111,7 +111,7 @@ private Array<TextureRegion>frames;
         //shape.setRadius(6 / MyGdxGame.PPM);
 
         fdef.filter.categoryBits = MyGdxGame.ENEMY_BIT;
-        fdef.filter.maskBits = MyGdxGame.GROUND_BIT | MyGdxGame.ENEMY_BIT |MyGdxGame.PLAYER_BIT;
+        fdef.filter.maskBits = MyGdxGame.GROUND_BIT | MyGdxGame.ENEMY_BIT |MyGdxGame.PLAYER_BIT | MyGdxGame.ITEM_BIT;
         fdef.shape = shape;
 
         b2body.createFixture(fdef);

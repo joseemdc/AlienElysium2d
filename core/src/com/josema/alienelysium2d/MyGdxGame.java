@@ -25,6 +25,7 @@ public class MyGdxGame extends Game {
     public static final short GROUND_BIT = 1;
     public static final short PLAYER_BIT = 2;
     public static  final short ENEMY_BIT=4;
+    public static  final short ITEM_BIT=8;
     public static FreeTypeFontGenerator generator;
     public static FreeTypeFontGenerator.FreeTypeFontParameter parameter;
     public static BitmapFont fontUi;

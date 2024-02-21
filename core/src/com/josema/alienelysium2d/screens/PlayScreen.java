@@ -18,6 +18,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -26,6 +27,7 @@ import com.josema.alienelysium2d.MyGdxGame;
 import com.josema.alienelysium2d.scenes.Hud;
 import com.josema.alienelysium2d.sprites.Alien;
 import com.josema.alienelysium2d.sprites.Player;
+import com.josema.alienelysium2d.sprites.items.Bullet;
 import com.josema.alienelysium2d.tools.B2WorldCreator;
 import com.josema.alienelysium2d.tools.Controller;
 import com.josema.alienelysium2d.tools.WorldContactListener;
@@ -56,6 +58,7 @@ public class PlayScreen implements Screen {
     private AssetManager manager;
     private Music music;
     private Controller controller;
+    private Array<Bullet>bullets= new Array<Bullet>();
     public enum State
     {
         PAUSE,
@@ -97,7 +100,7 @@ public class PlayScreen implements Screen {
         new B2WorldCreator(this);
         //crea un personaje en nuestro juego
         this.manager = manager;
-        player = new Player( this, manager);
+        player = new Player( this, manager,game.batch);
         alien= new Alien(this,.32f,.32f);
 
         world.setContactListener(new WorldContactListener(manager));
@@ -138,6 +141,9 @@ public class PlayScreen implements Screen {
         if ((Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A) || controller.isLeftPressed()) && player.b2body.getLinearVelocity().x >= -2) {
             player.b2body.applyLinearImpulse(new Vector2(-impulseX, 0), player.b2body.getWorldCenter(), true);
         }
+        if(Gdx.input.isKeyPressed(Input.Keys.F)&&!player.isShooting()){
+            player.shoot();
+        }
     }
 
     public void update(float dt) {
@@ -147,6 +153,14 @@ public class PlayScreen implements Screen {
         world.step((1 / 60f), 6, 2);
         player.update(dt);
         alien.update(dt);
+        if(bullets.size>0){
+
+        for (Bullet bullet:bullets
+             ) {
+            bullet.update(dt);
+        }
+        }
+
 
         // ancla  la gamecam a la posicion x del jugador
         gameCam.position.x = player.b2body.getPosition().x;
@@ -160,6 +174,10 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         //separa la logica de actualizacion de la de renderizacion
         update(delta);
+        if(player.isShooting()) {
+            Bullet bullet = new Bullet(this, 0, 0,player.b2body.getPosition().x,player.b2body.getPosition().y);
+            bullets.add(bullet);
+        }
         //limpia la pantalla
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -177,6 +195,14 @@ public class PlayScreen implements Screen {
        //
         player.draw(game.batch);
         alien.draw(game.batch);
+        if(bullets.size>0){
+
+            for (Bullet bullet:bullets
+            ) {
+                bullet.draw(game.batch);
+                // Gdx.app.log("Shot",player.isShooting()? "Siiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii":"No");
+            }
+        }
         game.batch.end();
 
         //establece el batch para dibujar lo que la camara del HUD ve
