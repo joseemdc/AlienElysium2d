@@ -32,6 +32,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.josema.alienelysium2d.MyGdxGame;
+import com.kotcrab.vis.ui.building.utilities.Alignment;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -89,14 +90,15 @@ public class SettingsScreen implements Screen {
 
         // Crea una tabla, donde añadiremos los elementos de menú
         Table table = new Table();
+        table.setSize(MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT);
         table.pad(2000/MyGdxGame.PPM);
 
         // La tabla ocupa toda la pantalla
         table.setFillParent(true);
-        //table.setHeight(500);
         stage.addActor(table);
         // Etiqueta de texto
         label = new Label(MyGdxGame.myBundle.get("settings"), new Label.LabelStyle(MyGdxGame.fontLogo, Color.WHITE));
+        label.setAlignment(Alignment.CENTER.ordinal());
         //label.setAlignment(GroupLayout.Alignment.CENTER.ordinal());
         table.add(label).expandX().padBottom(20).size(9000f/MyGdxGame.PPM,2000f/MyGdxGame.PPM);
         table.row();
@@ -369,7 +371,7 @@ bundle=  I18NBundle.createBundle(baseFileHandle, locale,"UTF-8");
 
 
 
-        table.debugAll();
+        //table.debugAll();
         Gdx.input.setInputProcessor(stage);
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
 

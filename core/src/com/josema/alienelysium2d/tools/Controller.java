@@ -32,7 +32,7 @@ public class Controller {
         Table table= new Table();
         table.left().bottom();
 
-        Image upImg = new Image(new Texture("controls/tile_up.png"));
+        Image upImg = new Image(new Texture("controls/switch_up_outline.png"));
         upImg.setSize(4000/MyGdxGame.PPM,4000/MyGdxGame.PPM);
         upImg.addListener(new InputListener(){
             @Override
@@ -46,7 +46,7 @@ public class Controller {
                 upPressed = false;
             }
         });
-        Image leftImg = new Image(new Texture("controls/tile_left.png"));
+        Image leftImg = new Image(new Texture("controls/switch_left_outline.png"));
         leftImg.setSize(4000/MyGdxGame.PPM,4000/MyGdxGame.PPM);
         leftImg.addListener(new InputListener(){
             @Override
@@ -60,7 +60,7 @@ public class Controller {
                 leftPressed = false;
             }
         });
-        Image rightImg = new Image(new Texture("controls/tile_right.png"));
+        Image rightImg = new Image(new Texture("controls/switch_right_outline.png"));
         rightImg.setSize(4000/MyGdxGame.PPM,4000/MyGdxGame.PPM);
         rightImg.addListener(new InputListener(){
             @Override
