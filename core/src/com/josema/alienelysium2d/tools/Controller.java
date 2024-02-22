@@ -20,7 +20,7 @@ import com.josema.alienelysium2d.MyGdxGame;
 public class Controller {
     Viewport viewport;
     Stage stage;
-    boolean upPressed, leftPressed, rightPressed;
+    boolean upPressed, leftPressed, rightPressed, firePressed;
     OrthographicCamera camera;
     boolean touchJustPressed = false;
     public Controller(Batch batch){
@@ -32,6 +32,20 @@ public class Controller {
         Table table= new Table();
         table.left().bottom();
 
+        Image fireImg = new Image(new Texture("controls/button_bullet.png"));
+        fireImg.setSize(4000/MyGdxGame.PPM,4000/MyGdxGame.PPM);
+        fireImg.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                firePressed=true;
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                firePressed = false;
+            }
+        });
         Image upImg = new Image(new Texture("controls/switch_up_outline.png"));
         upImg.setSize(4000/MyGdxGame.PPM,4000/MyGdxGame.PPM);
         upImg.addListener(new InputListener(){
@@ -86,7 +100,8 @@ public class Controller {
         table.add(leftImg).size(leftImg.getWidth(),leftImg.getHeight());
         table.add();
         table.add(rightImg).size(rightImg.getWidth(),rightImg.getHeight());
-        table.add(upImg).size(upImg.getWidth(),upImg.getHeight()).right().expandX().right();
+        table.add(fireImg).size(fireImg.getWidth(),fireImg.getHeight()).right().expandX().right();
+        table.add(upImg).size(upImg.getWidth(),upImg.getHeight()).right().right();
         table.row().padBottom(5);
         table.add();
         table.add();
@@ -117,6 +132,7 @@ table.debugAll();
     public boolean isRightPressed() {
         return rightPressed;
     }
+    public boolean isFirePressed(){return firePressed;}
 
     public void resize(int width, int height){
         viewport.update(width, height);

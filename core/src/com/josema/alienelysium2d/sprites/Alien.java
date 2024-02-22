@@ -20,6 +20,7 @@ private int health;
     public State currentState;
     public State previousState;
     private boolean runningRight;
+
 private Array<TextureRegion>frames;
     public Alien(PlayScreen screen, float x, float y) {
         super(screen, x, y);

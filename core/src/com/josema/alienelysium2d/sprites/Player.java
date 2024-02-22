@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.josema.alienelysium2d.MyGdxGame;
 import com.josema.alienelysium2d.screens.PlayScreen;
+import com.josema.alienelysium2d.sprites.items.Bullet;
 
 public class Player extends Sprite {
     public enum State {FAllING, JUMPING, STANDING, RUNNING}
@@ -38,6 +40,8 @@ public class Player extends Sprite {
     private boolean shooting = false;
 
     private SpriteBatch sb;
+    private Array<Bullet>bullets= new Array<Bullet>();
+    private PlayScreen screen;
 
 
     public Player(PlayScreen screen, AssetManager manager, SpriteBatch sb) {
@@ -45,6 +49,7 @@ public class Player extends Sprite {
         this.world = screen.getWorld();
         this.manager = manager;
         this.sb = sb;
+        this.screen=screen;
         currentState = State.STANDING;
         previousState = State.STANDING;
         stateTimer = 0;
@@ -98,6 +103,14 @@ public class Player extends Sprite {
 
 
         previousFrame = actualFrame;
+
+        if(bullets.size>0){
+
+            for (Bullet bullet:bullets
+            ) {
+                bullet.update(dt);
+            }
+        }
     }
 
     public TextureRegion getFrame(float dt) {
@@ -171,6 +184,7 @@ public class Player extends Sprite {
     public void shoot() {
         if (!shooting) {
             shooting = true;
+            bullets.add(new Bullet(screen, b2body.getPosition().x, b2body.getPosition().y, runningRight ? true : false));
             Timer.Task shootingTask= Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
@@ -187,5 +201,19 @@ public class Player extends Sprite {
 
     public boolean isShooting() {
         return shooting;
+    }
+    public void draw(Batch batch){
+        super.draw(batch);
+        if(bullets.size>0){
+
+            for (Bullet bullet:bullets
+            ) {
+                bullet.draw(batch);
+            }
+        }
+//        if(player.isShooting()) {
+//            Bullet bullet = new Bullet(this, player.b2body.getPosition().x, player.b2body.getPosition().y,player.b2body.getPosition().x,player.b2body.getPosition().y);
+//            bullets.add(bullet);
+//        }
     }
 }

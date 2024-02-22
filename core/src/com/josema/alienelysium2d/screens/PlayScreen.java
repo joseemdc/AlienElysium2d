@@ -58,7 +58,8 @@ public class PlayScreen implements Screen {
     private AssetManager manager;
     private Music music;
     private Controller controller;
-    private Array<Bullet>bullets= new Array<Bullet>();
+    private static float timeSpent;
+
     public enum State
     {
         PAUSE,
@@ -133,15 +134,15 @@ public class PlayScreen implements Screen {
         float impulseY = velocityY * dt;
         float impulseX = velocityX * dt; // Impulso horizontal requerido por segundo
         if ((Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.W) || controller.isUpPressed()) && player.currentState != Player.State.JUMPING) {
-            player.b2body.applyLinearImpulse(new Vector2(0, impulseY), player.b2body.getWorldCenter(), true);
+            player.b2body.applyLinearImpulse(new Vector2(0, 4), player.b2body.getWorldCenter(), true);
         }
         if ((Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D) || controller.isRightPressed()) && player.b2body.getLinearVelocity().x <= 2) {
-            player.b2body.applyLinearImpulse(new Vector2(impulseX, 0), player.b2body.getWorldCenter(), true);
+            player.b2body.applyLinearImpulse(new Vector2(1, 0), player.b2body.getWorldCenter(), true);
         }
         if ((Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A) || controller.isLeftPressed()) && player.b2body.getLinearVelocity().x >= -2) {
-            player.b2body.applyLinearImpulse(new Vector2(-impulseX, 0), player.b2body.getWorldCenter(), true);
+            player.b2body.applyLinearImpulse(new Vector2(-1, 0), player.b2body.getWorldCenter(), true);
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.F)&&!player.isShooting()){
+        if((Gdx.input.isKeyPressed(Input.Keys.F)||controller.isFirePressed())&&!player.isShooting()){
             player.shoot();
         }
     }
@@ -153,13 +154,7 @@ public class PlayScreen implements Screen {
         world.step((1 / 60f), 6, 2);
         player.update(dt);
         alien.update(dt);
-        if(bullets.size>0){
 
-        for (Bullet bullet:bullets
-             ) {
-            bullet.update(dt);
-        }
-        }
 
 
         // ancla  la gamecam a la posicion x del jugador
@@ -172,12 +167,16 @@ public class PlayScreen implements Screen {
 
     @Override
     public void render(float delta) {
+
+
+
+
+
+
+
         //separa la logica de actualizacion de la de renderizacion
         update(delta);
-        if(player.isShooting()) {
-            Bullet bullet = new Bullet(this, 0, 0,player.b2body.getPosition().x,player.b2body.getPosition().y);
-            bullets.add(bullet);
-        }
+
         //limpia la pantalla
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -195,14 +194,14 @@ public class PlayScreen implements Screen {
        //
         player.draw(game.batch);
         alien.draw(game.batch);
-        if(bullets.size>0){
-
-            for (Bullet bullet:bullets
-            ) {
-                bullet.draw(game.batch);
-                // Gdx.app.log("Shot",player.isShooting()? "Siiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii":"No");
-            }
-        }
+//        if(bullets.size>0){
+//
+//            for (Bullet bullet:bullets
+//            ) {
+//                bullet.draw(game.batch);
+//                // Gdx.app.log("Shot",player.isShooting()? "Siiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii":"No");
+//            }
+//        }
         game.batch.end();
 
         //establece el batch para dibujar lo que la camara del HUD ve
