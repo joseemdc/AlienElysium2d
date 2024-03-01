@@ -121,7 +121,7 @@ public class MainScreen implements Screen {
                 game.setScreen(new PlayScreen(game, manager));
             }
         });
-        table.add(buttonAchievements).expandX().padLeft(10).padTop(5).padBottom(5).size(9000f / MyGdxGame.PPM, 2000f / MyGdxGame.PPM);
+      //  table.add(buttonAchievements).expandX().padLeft(10).padTop(5).padBottom(5).size(9000f / MyGdxGame.PPM, 2000f / MyGdxGame.PPM);
         table.row().left();
 
         // Botón

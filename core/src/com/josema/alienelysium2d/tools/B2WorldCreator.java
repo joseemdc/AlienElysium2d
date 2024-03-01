@@ -33,8 +33,7 @@ public class B2WorldCreator {
 
             shape.setAsBox(rect.getWidth()/2/MyGdxGame.PPM,rect.getHeight()/2/MyGdxGame.PPM);
             fdef.filter.categoryBits = MyGdxGame.GROUND_BIT;
-            fdef.filter.maskBits = MyGdxGame.GROUND_BIT | MyGdxGame.ENEMY_BIT | MyGdxGame.ITEM_BIT |MyGdxGame
-                    .ENEMY_BIT |MyGdxGame.PLAYER_BIT;
+            fdef.filter.maskBits = MyGdxGame.GROUND_BIT | MyGdxGame.ENEMY_BIT | MyGdxGame.ITEM_BIT |MyGdxGame.ENEMY_BIT |MyGdxGame.PLAYER_BIT | MyGdxGame.BULLET_BIT;
             fdef.shape= shape;
             body.createFixture(fdef);
         }

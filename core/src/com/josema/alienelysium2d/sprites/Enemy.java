@@ -19,6 +19,7 @@ public abstract class Enemy extends Sprite {
         velocity= new Vector2(1,0);
     }
     protected abstract void defineEnemy();
+    public abstract void onBulletHit();
 
     public void reverseVelocity(boolean x, boolean y){
         if(x){

@@ -1,5 +1,7 @@
 package com.josema.alienelysium2d.sprites;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -109,6 +111,7 @@ public class Player extends Sprite {
             for (Bullet bullet:bullets
             ) {
                 bullet.update(dt);
+                
             }
         }
     }
@@ -185,12 +188,15 @@ public class Player extends Sprite {
         if (!shooting) {
             shooting = true;
             bullets.add(new Bullet(screen, b2body.getPosition().x, b2body.getPosition().y, runningRight ? true : false));
+            if(MyGdxGame.prefs.hasHaptic()){
+                Gdx.input.vibrate(Input.VibrationType.HEAVY);
+            }
             Timer.Task shootingTask= Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
                     shooting = false; // Cambia shooting a false cuando se complete la tarea
                 }
-            }, 0.5f); // Reemplaza tiempoDeseado con el tiempo en segundos
+            }, 0.20f); // Reemplaza tiempoDeseado con el tiempo en segundos
         }
     }
     public void stopShoot(){

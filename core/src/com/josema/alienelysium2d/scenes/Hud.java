@@ -57,7 +57,7 @@ public class Hud implements Disposable {
         levelLabel= new Label("1-1",new Label.LabelStyle(MyGdxGame.fontUi, Color.WHITE));
         worldLabel= new Label("SECTOR",new Label.LabelStyle(MyGdxGame.fontUi, Color.WHITE));
         playerLabel= new Label("PLAYER",new Label.LabelStyle(MyGdxGame.fontUi, Color.WHITE));
-playerLabel.setFontScale(0.7f);
+    playerLabel.setFontScale(0.7f);
         worldLabel.setFontScale(0.7f);
         levelLabel.setFontScale(0.7f);
         timeLabel.setFontScale(0.7f);
