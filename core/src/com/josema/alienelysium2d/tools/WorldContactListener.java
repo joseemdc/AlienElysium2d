@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.josema.alienelysium2d.MyGdxGame;
+import com.josema.alienelysium2d.sprites.Alien;
 import com.josema.alienelysium2d.sprites.items.Bullet;
 
 public class WorldContactListener implements ContactListener {
@@ -37,11 +38,15 @@ public class WorldContactListener implements ContactListener {
             case MyGdxGame.ENEMY_BIT | MyGdxGame.BULLET_BIT:
                 if(fixA.getFilterData().categoryBits == MyGdxGame.BULLET_BIT){
                     ((Bullet)fixA.getUserData()).collision();
+                    ((Alien)fixB.getUserData()).onBulletHit();
                 }else if(fixB.getFilterData().categoryBits == MyGdxGame.BULLET_BIT){
+                    ((Alien)fixA.getUserData()).onBulletHit();
                     ((Bullet)fixB.getUserData()).collision();
                 }
                 Gdx.app.log("Disparo", "En el blanco");
                 break;
+            case MyGdxGame.ENEMY_BIT |MyGdxGame.PLAYER_BIT:
+
         }
 
 

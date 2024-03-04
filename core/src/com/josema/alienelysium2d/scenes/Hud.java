@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.josema.alienelysium2d.MyGdxGame;
 import com.josema.alienelysium2d.tools.HealthBar;
@@ -24,7 +25,7 @@ public class Hud implements Disposable {
     private float timeCount;
     private Integer score;
     private SpriteBatch sb;
-    public static HealthBar healthBar;
+    public  HealthBar healthBar;
 
 
 
@@ -42,7 +43,8 @@ public class Hud implements Disposable {
         score=0;
         this.sb=sb;
         Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-        viewport=new FillViewport(MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT, new OrthographicCamera());
+        viewport=new FillViewport(MyGdxGame.V_WIDTH/MyGdxGame.PPM,MyGdxGame.V_HEIGHT/MyGdxGame.PPM, new OrthographicCamera());
+
         stage= new Stage(viewport,sb);
 
         Table table= new Table();

@@ -45,7 +45,7 @@ public class PlayScreen implements Screen {
     private OrthographicCamera backCam;
     private Viewport gamePort;
     private  Viewport backviewPort;
-    private Hud hud;
+    public Hud hud;
     //Tiled map variables
     private TmxMapLoader mapLoader;
     private TiledMap map;
@@ -102,7 +102,7 @@ public class PlayScreen implements Screen {
         new B2WorldCreator(this);
         //crea un personaje en nuestro juego
         this.manager = manager;
-        player = new Player( this, manager,game.batch);
+        player = new Player( this, manager,game.batch,hud);
         alien= new Alien(this,.32f,.32f);
 
         world.setContactListener(new WorldContactListener(manager));
@@ -189,7 +189,7 @@ public class PlayScreen implements Screen {
         //renderiza el mapa
         renderer.render();
         //rederiza las Box2DDebugLines
-        b2dr.render(world, gameCam.combined);
+        //b2dr.render(world, gameCam.combined);
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
        //

@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.josema.alienelysium2d.MyGdxGame;
+import com.josema.alienelysium2d.scenes.Hud;
 import com.josema.alienelysium2d.screens.PlayScreen;
 import com.josema.alienelysium2d.sprites.items.Bullet;
 
@@ -44,14 +45,17 @@ public class Player extends Sprite {
     private SpriteBatch sb;
     private Array<Bullet>bullets= new Array<Bullet>();
     private PlayScreen screen;
+    private float health = 1f;
+    Hud hud;
 
 
-    public Player(PlayScreen screen, AssetManager manager, SpriteBatch sb) {
+    public Player(PlayScreen screen, AssetManager manager, SpriteBatch sb, Hud hud) {
         super(screen.getAtlas().findRegion("scifiMan"));
         this.world = screen.getWorld();
         this.manager = manager;
         this.sb = sb;
         this.screen=screen;
+        this.hud=hud;
         currentState = State.STANDING;
         previousState = State.STANDING;
         stateTimer = 0;
@@ -187,6 +191,9 @@ public class Player extends Sprite {
     public void shoot() {
         if (!shooting) {
             shooting = true;
+
+
+            screen.hud.healthBar.setAnimateDuration(0.25f);
             bullets.add(new Bullet(screen, b2body.getPosition().x, b2body.getPosition().y, runningRight ? true : false));
             if(MyGdxGame.prefs.hasHaptic()){
                 Gdx.input.vibrate(Input.VibrationType.HEAVY);
@@ -198,6 +205,12 @@ public class Player extends Sprite {
                 }
             }, 0.20f); // Reemplaza tiempoDeseado con el tiempo en segundos
         }
+    }
+    public void receiveDamage(){
+        health-=0.1f;
+        screen.hud.healthBar.setAnimateDuration(0.0f);
+        screen.hud.healthBar.setAnimateDuration(0.0f);
+        screen.hud.healthBar.setValue(0.1f);
     }
     public void stopShoot(){
         if(shooting){
