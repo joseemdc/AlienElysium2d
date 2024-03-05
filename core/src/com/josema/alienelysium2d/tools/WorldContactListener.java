@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.josema.alienelysium2d.MyGdxGame;
 import com.josema.alienelysium2d.sprites.Alien;
+import com.josema.alienelysium2d.sprites.Player;
 import com.josema.alienelysium2d.sprites.items.Bullet;
 
 public class WorldContactListener implements ContactListener {
@@ -46,7 +47,12 @@ public class WorldContactListener implements ContactListener {
                 Gdx.app.log("Disparo", "En el blanco");
                 break;
             case MyGdxGame.ENEMY_BIT |MyGdxGame.PLAYER_BIT:
+            if(fixA.getFilterData().categoryBits == MyGdxGame.PLAYER_BIT){
+                ((Player)fixA.getUserData()).receiveDamage();
 
+            }else if(fixB.getFilterData().categoryBits == MyGdxGame.PLAYER_BIT){
+                ((Player)fixB.getUserData()).receiveDamage();
+            }
         }
 
 
@@ -58,6 +64,7 @@ public class WorldContactListener implements ContactListener {
         Gdx.app.log("Collision", "Fin contacto");
         Gdx.input.vibrate(Input.VibrationType.LIGHT);
         //Gdx.input.vibrate(35);
+        //TODO gestionar cuando el jugador deja de estar en contacto con el enemigo
     }
 
     @Override

@@ -24,42 +24,112 @@ import com.josema.alienelysium2d.screens.PlayScreen;
 import com.josema.alienelysium2d.sprites.items.Bullet;
 
 public class Player extends Sprite {
-    public enum State {FAllING, JUMPING, STANDING, RUNNING}
-
-    ;
+    /**
+     * Estado del jugador
+     *
+     * {@link #FAllING},{@link #JUMPING},{@link #STANDING},{@link #RUNNING}
+     */
+    public enum State {
+        /**
+     * Callendo
+     */
+        FAllING,
+        /**
+         * Saltando
+         */
+        JUMPING,
+        /**
+         * Quieto
+         */
+        STANDING,
+        /**
+         * Andando
+         */
+        RUNNING};
+    /**
+     * Estado actual del jugador
+     */
     public State currentState;
+    /**
+     * Estado del jugador en el frame anterior
+     */
     public State previousState;
+    /**
+     * Este mundo de físicas 2d
+     */
     public World world;
+    /**
+     * Cuerpo del personaje en el mundo de físicas
+     */
     public Body b2body;
+    /**
+     * Textura del personaje cuando está quieto
+     */
     private TextureRegion playerStand;
+    /**
+     * Animación de caminar
+     */
     private Animation playerRun;
+    /**
+     * Animación de saltar
+     */
     private Animation playerJump;
+    /**
+     * Timer que indica cuanto tiempo ha pasadado desde el último frame
+     */
 
     private float stateTimer;
-    private float stateTimerShoot;
+    /**
+     *Indica si el personaje está caminando hacia la derecha
+     */
     private boolean runningRight;
+    /**
+     * AssetManager del juego
+     */
     private AssetManager manager;
+    /**
+     * Textura del anterior frame
+     */
     private TextureRegion previousFrame;
+    /**
+     * Indica si el personaje está disparando
+     */
     private boolean shooting = false;
-
+    /**
+     * SpriteBatch del juego
+     */
     private SpriteBatch sb;
+    /**
+     * Colección de balas presentes en la escena
+     */
     private Array<Bullet>bullets= new Array<Bullet>();
+    /**
+     * Pantalla de juego
+     */
     private PlayScreen screen;
+    /**
+     * Vida del personaje
+     */
     private float health = 1f;
-    Hud hud;
 
 
-    public Player(PlayScreen screen, AssetManager manager, SpriteBatch sb, Hud hud) {
+    /**
+     *Crea un nuevo jugador con sus animaciones para cada estado
+     * @param screen Pantalla de juego
+     * @param manager AssetManager del juego
+     * @param sb SpriteBatch del juego
+     *
+     */
+    public Player(PlayScreen screen, AssetManager manager, SpriteBatch sb) {
         super(screen.getAtlas().findRegion("scifiMan"));
         this.world = screen.getWorld();
         this.manager = manager;
         this.sb = sb;
         this.screen=screen;
-        this.hud=hud;
         currentState = State.STANDING;
         previousState = State.STANDING;
         stateTimer = 0;
-        stateTimerShoot = 0;
+
         runningRight = true;
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
@@ -120,6 +190,11 @@ public class Player extends Sprite {
         }
     }
 
+    /**
+     * Devuelve el frame de la animación correspondiente que se debe mostrar en un momento exacto (DeltaTime), si está caminando establece la dirección en la que camina e invierte el correspondiene frame
+     * @param dt DeltaTime
+     * @return TextureRegion correspodiente al frame actual
+     */
     public TextureRegion getFrame(float dt) {
         currentState = getState();
 
@@ -153,6 +228,10 @@ public class Player extends Sprite {
 
     }
 
+    /**Devuelve el estado en el que se encuentra el personaje
+     *
+     * @return State - estado del jugador
+     */
     public State getState() {
         if (b2body.getLinearVelocity().y > 0 || (b2body.getLinearVelocity().y < 0 && previousState == State.JUMPING)) {
             return State.JUMPING;
@@ -165,6 +244,9 @@ public class Player extends Sprite {
         }
     }
 
+    /**
+     * Define la forma o cuerpo de colisión del jugador, en este caso rectangular y establece su categoryBits a su correspondiente, también se establece que pueda colisionar con el suelo y con otros cuerpos de tipo Enemy
+     */
     public void definePlayer() {
         BodyDef bdef = new BodyDef();
         bdef.position.set(32 / MyGdxGame.PPM, 80 / MyGdxGame.PPM);
@@ -187,12 +269,12 @@ public class Player extends Sprite {
     }
 
 
-
+    /**
+     *Crea una nueva bala en la dirección a la que mira el jugador, se asegura de que sea cada 0,2 segundos
+     */
     public void shoot() {
         if (!shooting) {
             shooting = true;
-
-
             screen.hud.healthBar.setAnimateDuration(0.25f);
             bullets.add(new Bullet(screen, b2body.getPosition().x, b2body.getPosition().y, runningRight ? true : false));
             if(MyGdxGame.prefs.hasHaptic()){
@@ -206,6 +288,10 @@ public class Player extends Sprite {
             }, 0.20f); // Reemplaza tiempoDeseado con el tiempo en segundos
         }
     }
+
+    /**
+     * Resta 0.1 de la vida del jugador y reduce la barra de vida
+     */
     public void receiveDamage(){
         health-=0.1f;
         screen.hud.healthBar.setAnimateDuration(0.0f);
@@ -218,9 +304,18 @@ public class Player extends Sprite {
         }
     }
 
+    /**Devuelve si el jugador está disparando o no
+     *
+     * @return True si el jugador está disparando o False si no lo está
+     */
     public boolean isShooting() {
         return shooting;
     }
+
+    /**
+     * Dibuja el personaje y las balas si las hubiera en ese instante
+     * @param batch
+     */
     public void draw(Batch batch){
         super.draw(batch);
         if(bullets.size>0){

@@ -102,7 +102,7 @@ public class PlayScreen implements Screen {
         new B2WorldCreator(this);
         //crea un personaje en nuestro juego
         this.manager = manager;
-        player = new Player( this, manager,game.batch,hud);
+        player = new Player( this, manager,game.batch);
         alien= new Alien(this,.32f,.32f);
 
         world.setContactListener(new WorldContactListener(manager));

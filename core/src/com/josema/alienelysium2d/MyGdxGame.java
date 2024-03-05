@@ -17,6 +17,7 @@ import com.josema.alienelysium2d.tools.Prefs;
 import java.util.Locale;
 
 public class MyGdxGame extends Game {
+
     public static int V_WIDTH = 800;
     public static int V_HEIGHT = 390;
 
