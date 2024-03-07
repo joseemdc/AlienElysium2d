@@ -3,6 +3,9 @@ package com.josema.alienelysium2d.tools;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 
+/**
+ * Clase que representa la barra de vida
+ */
 public class HealthBar extends ProgressBar {
     /**
      * @param width of the health bar

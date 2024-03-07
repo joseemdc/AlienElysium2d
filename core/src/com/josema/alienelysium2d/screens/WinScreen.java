@@ -1,6 +1,5 @@
 package com.josema.alienelysium2d.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -19,16 +18,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.josema.alienelysium2d.MyGdxGame;
-import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.building.utilities.Alignment;
 
 /**
- * Pantalla de GameOver
+ * Pantalla de victoria
  */
-public class GameOverScreen implements Screen {
+public class WinScreen implements Screen {
     /**
      * Viewport de la pantalla de créditos
      */
@@ -64,7 +61,7 @@ public class GameOverScreen implements Screen {
      * @param sb      SpriteBatch del juego
      */
 
-    public GameOverScreen(MyGdxGame game, AssetManager manager, SpriteBatch sb) {
+    public WinScreen(MyGdxGame game, AssetManager manager, SpriteBatch sb) {
         this.game = game;
         this.sb = sb;
         this.manager = manager;
@@ -87,7 +84,7 @@ public class GameOverScreen implements Screen {
         table.center();
         table.setFillParent(true);
         table.setSize(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT);
-        label = new Label(MyGdxGame.myBundle.get("gameOver"), new Label.LabelStyle(MyGdxGame.fontLogo, Color.WHITE));
+        label = new Label(MyGdxGame.myBundle.get("win"), new Label.LabelStyle(MyGdxGame.fontLogo, Color.WHITE));
         label.setAlignment(Alignment.CENTER.ordinal());
         //label.setAlignment(GroupLayout.Alignment.CENTER.ordinal());
         table.add(label).padBottom(20).size(9000f / MyGdxGame.PPM, 2000f / MyGdxGame.PPM);

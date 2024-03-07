@@ -17,12 +17,31 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.josema.alienelysium2d.MyGdxGame;
 
+/**
+ * Controles del juego
+ */
 public class Controller {
+    /**
+     * Viewport de los controles
+     */
     Viewport viewport;
+    /**
+     * Stage donde se dibujan los elementos
+     */
     Stage stage;
+    /**
+     * Indican si los respectivos botones están apretados
+     */
     boolean upPressed, leftPressed, rightPressed, firePressed;
+    /**
+     * Cámara ortográfica
+     */
     OrthographicCamera camera;
-    boolean touchJustPressed = false;
+
+    /**
+     * Crea un nuevo controller con los botones para moverse, saltar y disparar
+     * @param batch
+     */
     public Controller(Batch batch){
         camera = new OrthographicCamera();
         viewport = new FillViewport(MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT,camera);
@@ -107,33 +126,53 @@ public class Controller {
         table.add();
         table.add();
         table.add();
-table.debugAll();
+//table.debugAll();
         stage.addActor(table);
 
     }
+
+    /**
+     * Dibuja el stage con todos sus elementos
+     */
     public void draw(){
         stage.draw();
     }
-    public void isUpJustPressed(){
 
-    }
-
+    /**
+     * Devuelve True si el boton up está presionado
+     * @return True si está presionado, False si no
+     */
     public boolean isUpPressed() {
         return upPressed;
     }
 
 
-
+    /**
+     * Devuelve True si el boton left está presionado
+     * @return True si está presionado, False si no
+     */
     public boolean isLeftPressed() {
         return leftPressed;
     }
 
-
+    /**
+     * Devuelve True si el boton right está presionado
+     * @return True si está presionado, False si no
+     */
     public boolean isRightPressed() {
         return rightPressed;
     }
+    /**
+     * Devuelve True si el boton fire está presionado
+     * @return True si está presionado, False si no
+     */
     public boolean isFirePressed(){return firePressed;}
 
+    /**
+     * Actualizar el viewport con las nuevas dimensiones
+     * @param width Ancho
+     * @param height Alto
+     */
     public void resize(int width, int height){
         viewport.update(width, height);
     }

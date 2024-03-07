@@ -10,29 +10,26 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.josema.alienelysium2d.MyGdxGame;
 import com.kotcrab.vis.ui.building.utilities.Alignment;
 
+import java.util.ArrayList;
+
 /**
- * Pantalla de créditos
+ * Pantalla de records
  */
-public class CreditsScreen implements Screen {
+public class RecordsScreen implements Screen {
     /**
      * Clase principal del juego
      */
@@ -61,15 +58,9 @@ public class CreditsScreen implements Screen {
      * Sprite que equivale a la imagen del fondo
      */
     private Sprite backgroundSprite;
-    /**
-     * Indica si el usuario está haciendo scroll
-     */
-    private boolean isUserScrolling = false;
     Label label;
     ScrollPane scrollPane;
     VerticalGroup verticalGroup;
-    Label personajeslabel;
-
     TextButton buttonBack;
 
     /**
@@ -78,7 +69,7 @@ public class CreditsScreen implements Screen {
      * @param mainScreen Pantalla principal desde la que se lanza
      * @param sb         SpriteBatch del juego
      */
-    public CreditsScreen(MyGdxGame game, AssetManager manager, MainScreen mainScreen, SpriteBatch sb) {
+    public RecordsScreen(MyGdxGame game, AssetManager manager, MainScreen mainScreen, SpriteBatch sb) {
         this.game = game;
         this.manager = manager;
         this.sb = sb;
@@ -106,96 +97,26 @@ public class CreditsScreen implements Screen {
         //table.setHeight(500);
         stage.addActor(table);
         // Etiqueta de texto
-        label = new Label(MyGdxGame.myBundle.get("credits"), new Label.LabelStyle(MyGdxGame.fontLogo, Color.WHITE));
+        label = new Label(MyGdxGame.myBundle.get("records"), new Label.LabelStyle(MyGdxGame.fontLogo, Color.WHITE));
         label.setAlignment(Alignment.CENTER.ordinal());
         //label.setAlignment(GroupLayout.Alignment.CENTER.ordinal());
         table.add(label).expandX().padBottom(10).size(9000f / MyGdxGame.PPM, 2000f / MyGdxGame.PPM);
         table.row();
-
-        Container contaniner = new Container();
-        contaniner.height(1800 / MyGdxGame.PPM);
-        Container contaniner2 = new Container();
-        contaniner2.height(1800 / MyGdxGame.PPM);
-        //contaniner.debugAll();
-        Label developerLabel = new Label(MyGdxGame.myBundle.get("developedBy"), new Label.LabelStyle(MyGdxGame.fontUi, Color.WHITE));
-
-        personajeslabel = new Label(MyGdxGame.myBundle.get("characters"), new Label.LabelStyle(MyGdxGame.fontLogo, Color.WHITE));
-        personajeslabel.setAlignment(Alignment.CENTER.ordinal());
-        personajeslabel.setFontScale(0.7f);
-
-        Label mainCharacterlabel = new Label(MyGdxGame.myBundle.get("mainCharacter") + ": mayor676, Chasersgaming", new Label.LabelStyle(MyGdxGame.fontUi, Color.WHITE));
-        Label alienLabel = new Label(MyGdxGame.myBundle.get("alien") + ": Omni_Theorem", new Label.LabelStyle(MyGdxGame.fontUi, Color.WHITE));
-
-        Label musiclabel = new Label(MyGdxGame.myBundle.get("musicAndSounds"), new Label.LabelStyle(MyGdxGame.fontLogo, Color.WHITE));
-        musiclabel.setAlignment(Alignment.CENTER.ordinal());
-        musiclabel.setFontScale(0.7f);
-
-        Label menuThemelabel = new Label(MyGdxGame.myBundle.get("menuTheme") + ": Pixabay", new Label.LabelStyle(MyGdxGame.fontUi, Color.WHITE));
-        Label playThemelabel = new Label(MyGdxGame.myBundle.get("playTheme") + ": Pixabay", new Label.LabelStyle(MyGdxGame.fontUi, Color.WHITE));
-
-
         verticalGroup = new VerticalGroup();
         verticalGroup.space(10);
-        verticalGroup.addActor(contaniner);
-        verticalGroup.addActor(developerLabel);
-        verticalGroup.addActor(personajeslabel);
-        verticalGroup.addActor(mainCharacterlabel);
-        verticalGroup.addActor(alienLabel);
-        verticalGroup.addActor(musiclabel);
-        verticalGroup.addActor(menuThemelabel);
-        verticalGroup.addActor(playThemelabel);
-        verticalGroup.addActor(contaniner2);
+        ArrayList<Integer> records = MyGdxGame.prefs.getRecords();
+        if (records.size() > 0) {
+
+            for (int i = 0; i < records.size(); i++) {
+                Label record = new Label(String.format("SECTOR 1    TIME: %d", records.get(i)), new Label.LabelStyle(MyGdxGame.fontUi, Color.WHITE));
+                Gdx.app.log("RECORDS", "Hay records");
+
+                verticalGroup.addActor(record);
+            }
+        }
         scrollPane = new ScrollPane(verticalGroup);
-        // Agregar un listener para detectar cuando el usuario interactúa con el ScrollPane
-
-        scrollPane.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                isUserScrolling = true; // El usuario ha comenzado a desplazar manualmente
-                Gdx.app.log("Scroll", "Haciendo scroll");
-                return true;
-            }
-
-
-        });
         table.add(scrollPane);
-
-        // Programar el temporizador para hacer scroll automáticamente con interpolación suave
-
-        Timer.schedule(new Timer.Task() {
-            float timeElapsed = 0;
-            float duration = 0.35f; // Duración del desplazamiento en segundos
-            float startY = 0;
-            float targetY = 2; // Ajusta este valor según tus necesidades de desplazamiento
-
-            /**
-             * Ejecuta continuamente mientras el usuario no haya hecho scroll, desliza el scrollPane poco a poco
-             */
-            @Override
-            public void run() {
-                if (!isUserScrolling) {
-
-                    timeElapsed += Gdx.graphics.getDeltaTime();
-                    float alpha = timeElapsed / duration;
-                    float newY = Interpolation.smooth.apply(startY, targetY, alpha);
-                    scrollPane.setScrollY(newY);
-
-                    if (timeElapsed >= duration) {
-                        timeElapsed = 0;
-                        startY = scrollPane.getScrollY();
-                        targetY = startY + 2; // Cambia el valor de desplazamiento según tus necesidades
-                        if (startY >= scrollPane.getMaxY()) {
-                            scrollPane.setScrollY(0); // Reiniciar al principio si alcanza el final
-                            startY = 0;
-                            targetY = 2; // Reiniciar el valor de destino
-                        }
-                    }
-                }
-            }
-        }, 0, 0.005f); // Hace scroll cada 0.1 segundos, ajusta esto según tus necesidades
         table.row();
-
-
         buttonBack = new TextButton(MyGdxGame.myBundle.get("back"), skin);
 
         //buttonPlay.setPosition(label.getOriginX(), label.getOriginY() - 120);
@@ -228,9 +149,8 @@ public class CreditsScreen implements Screen {
             }
         });
         table.add(buttonBack).expandX().pad(10).size(9000f / MyGdxGame.PPM, 2000f / MyGdxGame.PPM);
-        table.row();
+
         Gdx.input.setInputProcessor(stage);
-        //table.debugAll();
     }
 
     /**
@@ -275,7 +195,7 @@ public class CreditsScreen implements Screen {
      *
      * @param width  Ancho
      * @param height Alto
-     **/
+     */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);

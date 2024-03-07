@@ -33,53 +33,112 @@ import com.josema.alienelysium2d.tools.B2WorldCreator;
 import com.josema.alienelysium2d.tools.Controller;
 import com.josema.alienelysium2d.tools.WorldContactListener;
 
+/**
+ * Pantalla de juego
+ */
 public class PlayScreen implements Screen {
-    //Referencia del juego, usado para establecer pantallas
+    /**
+     *Referencia del juego, usado para establecer pantallas
+     */
     private MyGdxGame game;
+    /**
+     * Sprite que equivale a la imagen del fondo
+     */
     private Sprite backgroundSprite;
+    /**
+     * Atlas con las texturas del personaje
+     */
     private TextureAtlas atlas;
-    private  TextureAtlas atlas2;
+    /**
+     * Atlas con las texturas del enemigo
+     */
+    private TextureAtlas atlas2;
     //variables báscias del PlayScreen
     Texture texture;
+    /**
+     * Cámara con proyección ortográfica
+     */
     private OrthographicCamera gameCam;
-    private OrthographicCamera backCam;
+    /**
+     * Viewport de la pantalla de juego
+     */
     private Viewport gamePort;
-    private  Viewport backviewPort;
+    /**
+     * Hud de la partida
+     */
     public Hud hud;
     //Tiled map variables
+    /**
+     * Cargador de mapa
+     */
     private TmxMapLoader mapLoader;
+    /**
+     * Mapa de baldosas
+     */
     private TiledMap map;
+    /**
+     * Rederizador de mapas de baldosas ortogonal
+     */
     private OrthogonalTiledMapRenderer renderer;
 
     //Box2d variables
+    /**
+     * Mundo de físicas 2d
+     */
     private World world;
+    /**
+     * Renderizador debug de box2d
+     */
     private Box2DDebugRenderer b2dr;
+    /**
+     * Creador de mundo B2D
+     */
+    private B2WorldCreator creator;
+    /**
+     * Jugador
+     */
     private Player player;
-    private Alien alien;
+    /**
+     * AssetManager del juego
+     */
     private AssetManager manager;
+    /**
+     * Se encarga de reproducir música
+     */
     private Music music;
+    /**
+     * Controles del juego
+     */
     private Controller controller;
-    private static float timeSpent;
+    /**
+     * Indica si el jugador ha llegado al final del mapa
+     */
+    public boolean metaReached=false;
 
-    public enum State
-    {
-        PAUSE,
-        RUN,
-        RESUME,
-        STOPPED
-    }
 
+//    public enum State {
+//        PAUSE,
+//        RUN,
+//        RESUME,
+//        STOPPED
+//    }
+
+    /**
+     * Crea una nueva pantalla de juego e inicializa sus componentes
+     * @param game Clase principal del juego
+     * @param manager AssetManager del juego
+     */
     public PlayScreen(MyGdxGame game, AssetManager manager) {
 
         atlas = new TextureAtlas("player_and_enemy.atlas");
-        atlas2= new TextureAtlas("alien.atlas");
+        atlas2 = new TextureAtlas("alien.atlas");
         this.game = game;
 
         gameCam = new OrthographicCamera();
-        backCam = new OrthographicCamera();
+
         //crear un FitViewport para mantener la relación de aspecto a pesar del tamaño de la pantalla
-        gamePort = new FillViewport((float) MyGdxGame.V_WIDTH /100 , (float) MyGdxGame.V_HEIGHT /100 , gameCam);
-        backviewPort = new FillViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
+        gamePort = new FitViewport((float) MyGdxGame.V_WIDTH / 100, (float) MyGdxGame.V_HEIGHT /100, gameCam);
+
 
         //crear el HUD para la informacion en pantalla
         hud = new Hud(game.batch);
@@ -89,47 +148,85 @@ public class PlayScreen implements Screen {
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("level1.tmx");
 
-        renderer = new OrthogonalTiledMapRenderer(map,1/(MyGdxGame.PPM));
+        renderer = new OrthogonalTiledMapRenderer(map, 1 / (MyGdxGame.PPM));
 
         //poner centrada la cámara al inicio del mapa
-        gameCam.position.set((float) gamePort.getWorldWidth()/2 , (float) gamePort.getWorldHeight() /2, 0);
+        gameCam.position.set((float) gamePort.getWorldWidth() / 2, (float) gamePort.getWorldHeight() / 2, 0);
         //crea un mundo Box2d
         world = new World(new Vector2(0, -10), true);
 
         //mostrar debug lines del mapa
         b2dr = new Box2DDebugRenderer();
 
-        new B2WorldCreator(this);
+        creator= new B2WorldCreator(this,manager);
         //crea un personaje en nuestro juego
         this.manager = manager;
-        player = new Player( this, manager,game.batch);
-        alien= new Alien(this,.32f,.32f);
+        player = new Player(this, manager, game.batch);
+        //alien = new Alien(this, .32f, .32f, manager);
 
-        world.setContactListener(new WorldContactListener(manager));
+        world.setContactListener(new WorldContactListener(manager,this));
         music = manager.get("audio/spaceship-ambience-with-effects-21420.mp3", Music.class);
         music.setLooping(true);
-        if(MyGdxGame.prefs.hasMusic()){
+        if (MyGdxGame.prefs.hasMusic()) {
 
-        music.play();
+            music.play();
         }
     }
+
+    /**
+     * Devuelve el Atlas del jugador
+     * @return TexyureAtlas con las texturas del jugador
+     */
 
     public TextureAtlas getAtlas() {
         return atlas;
     }
+
+    /**
+     * Devuelve el Atlas del alien
+     * @return TextureAtlas con las texturas del alien
+     */
     public TextureAtlas getAtlas2() {
         return atlas2;
     }
 
+    /**
+     * Dibuja el fondo de la pantalla
+     */
     @Override
     public void show() {
-        backgroundSprite =new Sprite(manager.get("images/background.png", Texture.class));
-        backgroundSprite.setSize(MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT);
+        backgroundSprite = new Sprite(manager.get("images/background.png", Texture.class));
+        backgroundSprite.setSize(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT);
     }
 
+    /**
+     * Gestiona la entrada del usuario y aplica las fuerzas correspondientes al jugador
+     * @param dt DeltaTime tiempo desde el ultimo render
+     */
     public void handleInput(float dt) {
 //        float velocityX = 0.0003f; // Velocidad horizontal deseada en unidades por segundo
 //        float velocityY=0.03f;
+        if (MyGdxGame.prefs.usesAccelerometer()) {
+            int orientation = Gdx.input.getRotation();
+
+            float accelerometerY = Gdx.input.getAccelerometerY();
+
+            // Constantes de sensibilidad para ajustar la respuesta del movimiento
+            float sensitivityX = 0.1f; // Sensibilidad en el eje X
+
+
+            // Calcula el impulso basado en la inclinación del dispositivo
+            float impulseX = -accelerometerY * sensitivityX;
+    if(orientation==90){
+        impulseX=-impulseX;
+    }
+            // Aplica el impulso al cuerpo del jugador
+            if (player.currentState == Player.State.JUMPING) {
+
+                player.b2body.applyLinearImpulse(new Vector2(impulseX, 0), player.b2body.getWorldCenter(), true);
+            }
+        }
+
         float velocityX = 4.5f; // Velocidad horizontal deseada en unidades por segundo
         float velocityY = 300f;
         float impulseY = velocityY * dt;
@@ -143,20 +240,32 @@ public class PlayScreen implements Screen {
         if ((Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A) || controller.isLeftPressed()) && player.b2body.getLinearVelocity().x >= -2) {
             player.b2body.applyLinearImpulse(new Vector2(-1, 0), player.b2body.getWorldCenter(), true);
         }
-        if((Gdx.input.isKeyPressed(Input.Keys.F)||controller.isFirePressed())&&!player.isShooting()){
+        if ((Gdx.input.isKeyPressed(Input.Keys.F) || controller.isFirePressed()) && !player.isShooting()) {
             player.shoot();
-            player.playerDead=true;
+            MyGdxGame.prefs.addRecord(hud.worldTimer);
+
         }
+        if (player.b2body.getPosition().y < 0.0f) {
+            player.playerDead = true;
+        }
+        Gdx.app.log("POSITION", String.valueOf(player.b2body.getPosition().y));
     }
 
+    /**
+     * Actualiza los elementos del juego con el DeltaTime
+     * @param dt DeltaTime tiempo desde el ultimo render
+     */
     public void update(float dt) {
         //gestionar input
         handleInput(dt);
 
         world.step((1 / 60f), 6, 2);
         player.update(dt);
+        for(Alien alien: creator.getAliens()){
         alien.update(dt);
 
+        }
+        hud.update(dt);
 
 
         // ancla  la gamecam a la posicion x del jugador
@@ -167,13 +276,12 @@ public class PlayScreen implements Screen {
         renderer.setView(gameCam);
     }
 
+    /**
+     * Dibuja cada vez que se ejecuta todos los elementos que hay en el juego y comprueba si el jugador ha llegado al final
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
-
-
-
-
-
 
 
         //separa la logica de actualizacion de la de renderizacion
@@ -182,7 +290,7 @@ public class PlayScreen implements Screen {
         //limpia la pantalla
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-      //  game.batch.setProjectionMatrix(backCam.combined);
+        //  game.batch.setProjectionMatrix(backCam.combined);
         game.batch.begin();
         backgroundSprite.draw(game.batch);
         game.batch.end();
@@ -193,17 +301,13 @@ public class PlayScreen implements Screen {
         //b2dr.render(world, gameCam.combined);
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
-       //
+        //
         player.draw(game.batch);
+        for(Alien alien: creator.getAliens()){
+
         alien.draw(game.batch);
-//        if(bullets.size>0){
-//
-//            for (Bullet bullet:bullets
-//            ) {
-//                bullet.draw(game.batch);
-//                // Gdx.app.log("Shot",player.isShooting()? "Siiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii":"No");
-//            }
-//        }
+        }
+
         game.batch.end();
 
         //establece el batch para dibujar lo que la camara del HUD ve
@@ -213,29 +317,55 @@ public class PlayScreen implements Screen {
         if (Gdx.app.getType() == (Application.ApplicationType.Android)) {
             controller.draw();
         }
-        if(gameOver()){
-            game.setScreen(new GameOverScreen(game,manager,game.batch));
+        if (gameOver()) {
+            game.setScreen(new GameOverScreen(game, manager, game.batch));
             //game.setScreen(new SettingsScreen(game,manager,this,game.batch));
-            Gdx.app.log("MUERTO","Game Over");
+            Gdx.app.log("MUERTO", "Game Over");
+            dispose();
+        }
+        if(metaReached){
+            MyGdxGame.prefs.addRecord(hud.worldTimer);
+            game.setScreen(new WinScreen(game,manager,game.batch));
             dispose();
         }
     }
 
+    /**
+     * Actualiza el viewport, el controller y el hud con las nuevas dimensiones
+     * @param width Ancho
+     * @param height Alto
+     */
     @Override
     public void resize(int width, int height) {
         gamePort.update(width, height);
         controller.resize(width, height);
+        hud.resize(width,height);
     }
-    public TiledMap getMap(){
+
+    /**
+     * Devuelve el mapa del nivel
+     * @return TiledMap mapa actual del juego
+     */
+    public TiledMap getMap() {
         return map;
     }
-    public World getWorld(){
+
+    /**
+     * Devuelve el World del juego
+     * @return World del juego
+     */
+    public World getWorld() {
         return world;
     }
-    public boolean gameOver(){
-        if(player.isDead()){
+
+    /**
+     * Comprueba si el jugador ha muerto
+     * @return True si el jugador ha mueto o False si no
+     */
+    public boolean gameOver() {
+        if (player.isDead()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }

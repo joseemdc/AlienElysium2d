@@ -29,22 +29,50 @@ import com.kotcrab.vis.ui.building.utilities.Alignment;
 
 import javax.swing.GroupLayout;
 
+/**
+ * Pantalla principal
+ */
 public class MainScreen implements Screen {
+    /**
+     * Clase principal del juego
+     */
     private MyGdxGame game;
+    /**
+     * AssetManager del juego
+     */
     private AssetManager manager;
+    /**
+     * Viewport de la pantalla de créditos
+     */
     private Viewport viewport;
+    /**
+     * Stage donde dibujar los elementos
+     */
     private Stage stage;
-    private Stage backgroundStage;
+    /**
+     * SpriteBatch del juego
+     */
     private SpriteBatch sb;
+
+    /**
+     * Sprite que equivale a la imagen del fondo
+     */
     private Sprite backgroundSprite;
 
-
+    /**
+     *
+     * @param game Clase principal del juego
+     * @param manager Assetmanager del juego
+     * @param sb SpriteBatch del juego
+     */
     public MainScreen(MyGdxGame game, AssetManager manager, SpriteBatch sb) {
         this.game = game;
         this.manager = manager;
         this.sb = sb;
     }
-
+    /**
+     * Carga los elementos de la pantalla como textos y botones y se establecen sus propiedades
+     */
     public void loadScreen() {
         VisUI.load();
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
@@ -103,7 +131,7 @@ public class MainScreen implements Screen {
         table.row().left();
 
         // Botón
-        TextButton buttonAchievements = new TextButton(MyGdxGame.myBundle.get("achievements"), skin);
+        TextButton buttonAchievements = new TextButton(MyGdxGame.myBundle.get("records"), skin);
         //buttonAchievements.setPosition(label.getOriginX(), label.getOriginY() - 170);
         buttonAchievements.setStyle(textButtonStyle);
         buttonAchievements.setSkin(skin);
@@ -118,10 +146,10 @@ public class MainScreen implements Screen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 
                 dispose();
-                game.setScreen(new PlayScreen(game, manager));
+                game.setScreen(new RecordsScreen(game, manager, MainScreen.this, sb));
             }
         });
-      //  table.add(buttonAchievements).expandX().padLeft(10).padTop(5).padBottom(5).size(9000f / MyGdxGame.PPM, 2000f / MyGdxGame.PPM);
+        table.add(buttonAchievements).expandX().padLeft(10).padTop(5).padBottom(5).size(9000f / MyGdxGame.PPM, 2000f / MyGdxGame.PPM);
         table.row().left();
 
         // Botón
@@ -182,13 +210,43 @@ public class MainScreen implements Screen {
             }
         });
         table.add(buttonCredits).expandX().padLeft(10).padTop(5).padBottom(5).size(9000f / MyGdxGame.PPM, 2000f / MyGdxGame.PPM);
+        // Botón
+        TextButton buttonHelp = new TextButton(MyGdxGame.myBundle.get("help"), skin);
+        // buttonCredits.setPosition(label.getOriginX(), label.getOriginY() - 270);
+        buttonHelp.setStyle(textButtonStyle);
+        buttonHelp.setSkin(skin);
+        buttonHelp.setWidth(200);
+        buttonHelp.setHeight(40);
+        buttonHelp.getLabel().setFontScale(0.7f);
+        buttonHelp.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (MyGdxGame.prefs.hasHaptic()) {
+
+                    Gdx.input.vibrate(Input.VibrationType.LIGHT);
+                }
+                return true;
+            }
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (MyGdxGame.prefs.hasHaptic()) {
+
+                    Gdx.input.vibrate(Input.VibrationType.HEAVY);
+                }
+                dispose();
+                game.setScreen(new HelpScreen(game, manager, MainScreen.this, sb));
+            }
+        });
+        table.add(buttonHelp).expandX().padLeft(10).right().padTop(5).padBottom(5).size(9000f / MyGdxGame.PPM, 2000f / MyGdxGame.PPM);
+
         //table.debugAll();
 
 
         Gdx.input.setInputProcessor(stage);
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
     }
-
+    /**
+     * Establece el fondo de la pantalla y llama a {@link #loadScreen()} para añadir el resto de elementos
+     */
     @Override
     public void show() {
 
@@ -200,7 +258,10 @@ public class MainScreen implements Screen {
         loadScreen();
 
     }
-
+    /**
+     * Dibuja el fondo y luego los elementos que estén en el Stage, comprueba si el usuario hace click en el botón de ir atrás
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         //limpia la pantalla
@@ -215,7 +276,11 @@ public class MainScreen implements Screen {
 
         stage.draw();
     }
-
+    /**
+     * Actualiza el viewport con las nuevas dimensiones
+     * @param width Ancho
+     * @param height Alto
+     */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);

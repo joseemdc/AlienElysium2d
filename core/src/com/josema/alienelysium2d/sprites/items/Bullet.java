@@ -16,18 +16,48 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.josema.alienelysium2d.MyGdxGame;
 import com.josema.alienelysium2d.screens.PlayScreen;
 
+/**
+ * Clase que representa una Bala en el juego
+ */
 public class Bullet extends Sprite {
+    /**
+     * Indica si se está disparando hacia la derecha
+     */
     boolean fireRight;
-    PlayScreen screen;
-    World world;
+    /**
+     * Mundo de Box2d
+     */
+    private World world;
+    /**
+     * Posicion x
+     */
     private float x;
+    /**
+     * Posicion y
+     */
     private float y;
+    /**
+     * Cuerpo de colisiones de Box2d
+     */
     public Body b2body;
+    /**
+     * Indica si la bala  está lista para borrarse
+     */
     public boolean setToDestroy = false;
+    /**
+     * Indica si la bala está destruida
+     */
     public boolean destroyed=false;
 
+    /**
+     * Crea una nueva Bala en la posicion indicada y hacia la direccion indicada
+     * @param screen Pantalla de juego
+     * @param x Coordenada x
+     * @param y Coordenada y
+     * @param fireTight True si se dispara hacia la derecha o False si es hacia la izquierda
+     */
     public Bullet(PlayScreen screen, float x, float y, boolean fireTight) {
-        this.screen = screen;
+
         this.fireRight = fireTight;
         this.world = screen.getWorld();
         this.x = x;
@@ -46,6 +76,10 @@ public class Bullet extends Sprite {
         defineBUllet();
     }
 
+    /**
+     * ACtualiza la posición de la bala, concretamente del sprite para que coincida con la posición del cuerpo del mundo de colisiones
+     * @param dt
+     */
     public void update(float dt) {
         // Multiplica la velocidad lineal por el tiempo transcurrido (delta time)
         float velocityX = b2body.getLinearVelocity().x * dt;
@@ -67,6 +101,9 @@ public class Bullet extends Sprite {
 
     }
 
+    /**
+     * Define una bala, su cuerpo de colisiones con sus propiedades tamaño, tipo, forma y con qué objetos puede colisionar
+     */
     protected void defineBUllet() {
         BodyDef bdef = new BodyDef();
         bdef.position.set(fireRight ? getX() + 12 / MyGdxGame.PPM : getX(), getY());
@@ -92,6 +129,10 @@ public class Bullet extends Sprite {
 
     }
 
+    /**
+     * Dibuja la bala siempre que no esté destruida
+     * @param batch Batch del sprite
+     */
     public void draw(Batch batch) {
         if(!destroyed){
 
@@ -99,6 +140,9 @@ public class Bullet extends Sprite {
         }
     }
 
+    /**
+     * Se ejecuta cuando la bala colisiona con algo e inmediatamente se marca para ser destruida
+     */
     public void collision() {
         setToDestroy = true;
     }

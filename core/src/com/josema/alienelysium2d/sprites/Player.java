@@ -23,6 +23,9 @@ import com.josema.alienelysium2d.scenes.Hud;
 import com.josema.alienelysium2d.screens.PlayScreen;
 import com.josema.alienelysium2d.sprites.items.Bullet;
 
+/**
+ * Clase del personaje principal del juego
+ */
 public class Player extends Sprite {
     /**
      * Estado del jugador
@@ -266,7 +269,7 @@ public class Player extends Sprite {
         //shape.setRadius(6 / MyGdxGame.PPM);
 
         fdef.filter.categoryBits = MyGdxGame.PLAYER_BIT;
-        fdef.filter.maskBits = MyGdxGame.GROUND_BIT | MyGdxGame.ENEMY_BIT;
+        fdef.filter.maskBits = MyGdxGame.GROUND_BIT | MyGdxGame.ENEMY_BIT | MyGdxGame.META_BIT;
         fdef.shape = shape;
 
 
@@ -283,6 +286,10 @@ public class Player extends Sprite {
             shooting = true;
             screen.hud.healthBar.setAnimateDuration(0.25f);
             bullets.add(new Bullet(screen, b2body.getPosition().x, b2body.getPosition().y, runningRight ? true : false));
+            if (MyGdxGame.prefs.hasSoundEffects()) {
+
+                manager.get("audio/lasergun.mp3", Sound.class).play();
+            }
             if(MyGdxGame.prefs.hasHaptic()){
                 Gdx.input.vibrate(Input.VibrationType.HEAVY);
             }
