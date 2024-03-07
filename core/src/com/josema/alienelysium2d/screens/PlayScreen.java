@@ -145,6 +145,7 @@ public class PlayScreen implements Screen {
         }
         if((Gdx.input.isKeyPressed(Input.Keys.F)||controller.isFirePressed())&&!player.isShooting()){
             player.shoot();
+            player.playerDead=true;
         }
     }
 
@@ -212,6 +213,12 @@ public class PlayScreen implements Screen {
         if (Gdx.app.getType() == (Application.ApplicationType.Android)) {
             controller.draw();
         }
+        if(gameOver()){
+            game.setScreen(new GameOverScreen(game,manager,game.batch));
+            //game.setScreen(new SettingsScreen(game,manager,this,game.batch));
+            Gdx.app.log("MUERTO","Game Over");
+            dispose();
+        }
     }
 
     @Override
@@ -224,6 +231,13 @@ public class PlayScreen implements Screen {
     }
     public World getWorld(){
         return world;
+    }
+    public boolean gameOver(){
+        if(player.isDead()){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override
@@ -248,5 +262,6 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
+        music.dispose();
     }
 }

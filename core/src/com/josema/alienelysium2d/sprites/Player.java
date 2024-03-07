@@ -27,11 +27,11 @@ public class Player extends Sprite {
     /**
      * Estado del jugador
      *
-     * {@link #FAllING},{@link #JUMPING},{@link #STANDING},{@link #RUNNING}
+     * {@link #FAllING},{@link #JUMPING},{@link #STANDING},{@link #RUNNING},{@link #DEAD}
      */
     public enum State {
         /**
-     * Callendo
+     * Cayendo
      */
         FAllING,
         /**
@@ -45,7 +45,11 @@ public class Player extends Sprite {
         /**
          * Andando
          */
-        RUNNING};
+        RUNNING,
+        /**
+         * Muerto
+         */
+    DEAD};
     /**
      * Estado actual del jugador
      */
@@ -111,6 +115,7 @@ public class Player extends Sprite {
      * Vida del personaje
      */
     private float health = 1f;
+    public boolean playerDead=false;
 
 
     /**
@@ -264,7 +269,8 @@ public class Player extends Sprite {
         fdef.filter.maskBits = MyGdxGame.GROUND_BIT | MyGdxGame.ENEMY_BIT;
         fdef.shape = shape;
 
-        b2body.createFixture(fdef);
+
+        b2body.createFixture(fdef).setUserData(this);
 
     }
 
@@ -296,12 +302,16 @@ public class Player extends Sprite {
         health-=0.1f;
         screen.hud.healthBar.setAnimateDuration(0.0f);
         screen.hud.healthBar.setAnimateDuration(0.0f);
-        screen.hud.healthBar.setValue(0.1f);
-    }
-    public void stopShoot(){
-        if(shooting){
-            shooting=false;
+        screen.hud.healthBar.setValue(health);
+//        Gdx.app.log("HEALTH", String.valueOf(health));
+        if(health<0.1f){
+            Gdx.app.log("AAAAAAAAAA","BBBBBBBBBB");
+            currentState=State.DEAD;
+            playerDead=true;
         }
+    }
+    public boolean isDead(){
+        return playerDead;
     }
 
     /**Devuelve si el jugador está disparando o no

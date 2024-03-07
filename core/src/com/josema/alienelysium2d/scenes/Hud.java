@@ -43,7 +43,7 @@ public class Hud implements Disposable {
         score=0;
         this.sb=sb;
         Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-        viewport=new FillViewport(MyGdxGame.V_WIDTH/MyGdxGame.PPM,MyGdxGame.V_HEIGHT/MyGdxGame.PPM, new OrthographicCamera());
+        viewport=new FillViewport(MyGdxGame.V_WIDTH,MyGdxGame.V_HEIGHT, new OrthographicCamera());
 
         stage= new Stage(viewport,sb);
 
